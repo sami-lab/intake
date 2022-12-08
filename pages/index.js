@@ -17,11 +17,12 @@ import {
   Slide,
   MenuItem,
   Radio,
+  Divider,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SearchIcon from '@mui/icons-material/Search';
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Header from '../src/reusable/header';
 
 const sampleCustomers = [
@@ -502,6 +503,14 @@ export default function Index() {
     value: '',
   });
 
+  const [rateAmount, setRateAmount] = useState({
+    contractAmount: '',
+    margin: '',
+    declValue: '',
+    actualAmount: '',
+    actualMargin: '',
+  });
+
   const addCustomerHandler = (data, callback) => {
     //use callback(err) to set Error
     setCustomers([...customers, data]);
@@ -571,7 +580,7 @@ export default function Index() {
       <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
         <Grid container spacing={2}>
           {/* customer */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '35%' }}>
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '33%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -848,7 +857,7 @@ export default function Index() {
           </Grid>
 
           {/* load entry */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '20%' }}>
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '17%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -1021,6 +1030,360 @@ export default function Index() {
                         </MenuItem>
                       ))}
                     </TextField>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Trace numbers */}
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '25%' }}>
+            <Grid container direction="column" sx={cardStyleSx}>
+              {/* heading */}
+              <Grid item style={{ width: '100%' }}>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{
+                    flexGrow: 1,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Trace Numbers
+                </Typography>
+              </Grid>
+              <Grid item style={{ width: '100%' }}>
+                <Grid container direction="column" alignItems={'flex-start'}>
+                  {/* trace number and type */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{
+                            fontWeight: 600,
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#505050',
+                          }}
+                        >
+                          Trace Number
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{
+                            fontWeight: 600,
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#505050',
+                          }}
+                        >
+                          Type
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* divider */}
+                  <Grid item style={{ marginTop: '5px', width: '100%' }}>
+                    <Divider style={{ borderWidth: '1px' }} />
+                  </Grid>
+                  {/* EDI shipment ID */}
+                  <Grid item style={{ marginTop: '10px', width: '100%' }}>
+                    <Grid container spacing={1}>
+                      {/* value */}
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          A000000000
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          EDI Shipment ID
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* Bill of Landing */}
+                  <Grid item style={{ marginTop: '10px', width: '100%' }}>
+                    <Grid container spacing={1}>
+                      {/* value */}
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          ABC000000
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          Bill of Landing
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* ProBill */}
+                  <Grid item style={{ marginTop: '10px', width: '100%' }}>
+                    <Grid container spacing={1}>
+                      {/* value */}
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          A0000000000
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          ProBill
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* purchase order */}
+                  <Grid item style={{ marginTop: '10px', width: '100%' }}>
+                    <Grid container spacing={1}>
+                      {/* value */}
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: '20px',
+                            color:
+                              theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                        >
+                          0000
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Grid
+                          container
+                          style={{ gap: '4px' }}
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Grid item>
+                            <Typography
+                              variant="body2"
+                              style={{
+                                fontSize: '13px',
+                                lineHeight: '20px',
+                                color:
+                                  theme.palette.mode === 'dark'
+                                    ? theme.palette.light.main
+                                    : '#777777',
+                              }}
+                            >
+                              Purchase Order
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <IconButton
+                              style={{ padding: 0 }}
+                              // onClick={() => {
+                              //   setOpenAddCustomerModal({
+                              //     active: true,
+                              //     customer: null,
+                              //   });
+                              // }}
+                              disableRipple
+                            >
+                              <AddCircleIcon
+                                style={{
+                                  color:
+                                    theme.palette.mode === 'dark'
+                                      ? theme.palette.light.main
+                                      : theme.palette.primary.main,
+                                }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Rate Amount */}
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '25%' }}>
+            <Grid container direction="column" sx={cardStyleSx}>
+              {/* heading */}
+              <Grid item style={{ width: '100%' }}>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{
+                    flexGrow: 1,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Rate Amount
+                </Typography>
+              </Grid>
+              {/* inputs */}
+              <Grid item style={{ width: '100%' }}>
+                <Grid container direction="column" alignItems={'flex-start'}>
+                  {/* contract amount, Margin, Decl value */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+                      {/* contractAmount */}
+                      <Grid item xs={4}>
+                        <TextField
+                          variant="standard"
+                          fullWidth
+                          label="Contract Amount"
+                          placeholder=""
+                          InputProps={{
+                            startAdornment: '$',
+                          }}
+                          value={rateAmount.contractAmount}
+                          onChange={(e) =>
+                            setRateAmount({
+                              ...rateAmount,
+                              contractAmount: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                      {/* margin */}
+                      <Grid item xs={4}>
+                        <TextField
+                          variant="standard"
+                          fullWidth
+                          label="Margin"
+                          placeholder=""
+                          InputProps={{
+                            startAdornment: ' ',
+                            endAdornment: '%',
+                          }}
+                          value={rateAmount.margin}
+                          onChange={(e) =>
+                            setRateAmount({
+                              ...rateAmount,
+                              margin: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                      {/* declValue */}
+                      <Grid item xs={4}>
+                        <TextField
+                          variant="standard"
+                          fullWidth
+                          label="Decl. Value"
+                          placeholder=""
+                          InputProps={{
+                            startAdornment: '$',
+                          }}
+                          value={rateAmount.declValue}
+                          onChange={(e) =>
+                            setRateAmount({
+                              ...rateAmount,
+                              declValue: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* actualAmtount actualMargin */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <Grid container spacing={4} alignItems="center">
+                      {/* actualAmount */}
+                      <Grid item xs={4}>
+                        <TextField
+                          variant="standard"
+                          fullWidth
+                          label="Actual Covered Amt."
+                          placeholder=""
+                          InputProps={{
+                            startAdornment: '$',
+                          }}
+                          value={rateAmount.actualAmount}
+                          onChange={(e) =>
+                            setRateAmount({
+                              ...rateAmount,
+                              actualAmount: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                      {/*Actual margin */}
+                      <Grid item xs={4}>
+                        <TextField
+                          variant="standard"
+                          fullWidth
+                          label="Actual Margin"
+                          placeholder=""
+                          InputProps={{
+                            startAdornment: ' ',
+                            endAdornment: '%',
+                          }}
+                          value={rateAmount.actualMargin}
+                          onChange={(e) =>
+                            setRateAmount({
+                              ...rateAmount,
+                              actualMargin: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
