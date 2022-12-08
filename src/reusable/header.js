@@ -241,17 +241,11 @@ export default function Header() {
         }}
       >
         <Toolbar disableGutters>
-          <Grid
-            container
-            className="container"
-            justifyContent="space-between"
-            alignItems="center"
-            wrap="nowrap"
-          >
+          <Grid container className="container" justifyContent="space-between" alignItems="center">
             <Grid item>
-              <Grid container spacing={2} alignItems={'center'}>
+              <Grid container style={{ gap: '10px' }} alignItems={'center'}>
                 <Grid item>
-                  <IconButton edge="start" color="inherit" aria-label="menu">
+                  <IconButton style={{ padding: 0 }} color="inherit" aria-label="menu">
                     <MenuIcon
                       style={{
                         fontSize: '2.2rem',
