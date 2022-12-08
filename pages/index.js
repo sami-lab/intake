@@ -15,9 +15,13 @@ import {
   Alert,
   Button,
   Slide,
+  MenuItem,
+  Radio,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import SearchIcon from '@mui/icons-material/Search';
+
 import Header from '../src/reusable/header';
 
 const sampleCustomers = [
@@ -39,10 +43,118 @@ const sampleCustomers = [
   },
 ];
 
+const rateTypeOptions = [
+  {
+    label: 'Contract-Primary',
+    value: 'Contract-Primary',
+  },
+];
+const equipmentOptions = [
+  {
+    type: 'Van',
+    values: [
+      {
+        label: 'VN53',
+        value: 'VN53',
+      },
+      {
+        label: 'VN54',
+        value: 'VN54',
+      },
+      {
+        label: 'VN55',
+        value: 'VN55',
+      },
+      {
+        label: 'VN56',
+        value: 'VN56',
+      },
+      {
+        label: 'VN57',
+        value: 'VN57',
+      },
+      {
+        label: 'VN58',
+        value: 'VN58',
+      },
+    ],
+  },
+  {
+    type: 'Reefer',
+    values: [
+      {
+        label: 'RF53',
+        value: 'RF53',
+      },
+      {
+        label: 'RF54',
+        value: 'RF54',
+      },
+      {
+        label: 'RF55',
+        value: 'RF55',
+      },
+      {
+        label: 'RF56',
+        value: 'RF56',
+      },
+      {
+        label: 'RF57',
+        value: 'RF57',
+      },
+      {
+        label: 'RF58',
+        value: 'RF58',
+      },
+    ],
+  },
+  {
+    type: 'Hazmat',
+    values: [
+      {
+        label: 'HZ53',
+        value: 'HZ53',
+      },
+      {
+        label: 'HZ54',
+        value: 'HZ54',
+      },
+      {
+        label: 'HZ55',
+        value: 'HZ55',
+      },
+      {
+        label: 'HZ56',
+        value: 'HZ56',
+      },
+      {
+        label: 'HZ57',
+        value: 'HZ57',
+      },
+      {
+        label: 'HZ58',
+        value: 'HZ58',
+      },
+    ],
+  },
+];
+
+const slOptions = [
+  {
+    label: 'Solo',
+    value: 'Solo',
+  },
+];
+const statusOptions = [
+  {
+    label: 'Planned',
+    value: 'Planned',
+  },
+];
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const AddOrUpdateCustomerModal = (props) => {
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
   const theme = useTheme();
   const [data, setData] = useState({
     id: null,
@@ -229,7 +341,7 @@ const AddOrUpdateCustomerModal = (props) => {
               <Grid item>
                 <Button
                   variant="contained"
-                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
                   onClick={props.handleClose}
                 >
                   Clear
@@ -243,6 +355,118 @@ const AddOrUpdateCustomerModal = (props) => {
   );
 };
 
+const SelectEquipmentDialog = (props) => {
+  const theme = useTheme();
+  const [value, setValue] = useState(props.value ? props.value : '');
+
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Select Equipment Type
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* radios  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid
+              container
+              wrap="nowrap"
+              spacing={4}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              {/* options */}
+              {props?.equipments?.map((eq, i) => (
+                <Grid item key={i}>
+                  <Grid container direction="column">
+                    <Grid item>
+                      <Typography
+                        variant="h5"
+                        style={{
+                          fontWeight: 600,
+                          color:
+                            theme.palette.mode === 'dark' ? theme.palette.light.main : '#505050',
+                        }}
+                      >
+                        {eq.type}
+                      </Typography>
+                    </Grid>
+                    {eq.values.map((v, ind) => (
+                      <Grid
+                        item
+                        style={{ marginTop: ind === 0 ? '15px' : '1px' }}
+                        key={`${i}-${ind}`}
+                      >
+                        {' '}
+                        <FormControlLabel
+                          control={
+                            <Radio
+                              value={v.value}
+                              checked={value === v.value}
+                              onChange={() => setValue(v.value)}
+                              name="equipment"
+                            />
+                          }
+                          label={v.label}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* save */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  primary
+                  onClick={() => props.submitHandler(value)}
+                >
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -261,8 +485,21 @@ export default function Index() {
   });
   const [contactInputValue, setContactInputValue] = React.useState('');
   const [openAddCustomerModal, setOpenAddCustomerModal] = useState({
-    active: true,
+    active: false,
     customer: null,
+  });
+
+  const [equipments, setEquipments] = useState(equipmentOptions);
+  const [loadEntry, setLoadEntry] = useState({
+    rateType: '',
+    sl: '',
+    equipment: '',
+    status: '',
+  });
+  const [equipmentInputValue, setEquipmentInputValue] = React.useState('');
+  const [selectEquipmentModal, setSelectEquipmentModal] = useState({
+    active: false,
+    value: '',
   });
 
   const addCustomerHandler = (data, callback) => {
@@ -296,15 +533,35 @@ export default function Index() {
     <Grid container direction="column">
       <AddOrUpdateCustomerModal
         open={openAddCustomerModal.active}
-        handleClose={() =>
+        handleClose={() => {
           setOpenAddCustomerModal({
             active: false,
             customer: null,
-          })
-        }
+          });
+        }}
         edit={openAddCustomerModal.customer !== null}
         customer={openAddCustomerModal.customer}
         submitHandler={addCustomerHandler}
+      />
+      <SelectEquipmentDialog
+        open={selectEquipmentModal.active}
+        handleClose={() => {
+          setSelectEquipmentModal({
+            active: false,
+            value: '',
+          });
+        }}
+        equipments={equipments}
+        submitHandler={(value) => {
+          setLoadEntry({
+            ...loadEntry,
+            equipment: value,
+          });
+          setSelectEquipmentModal({
+            active: false,
+            value: '',
+          });
+        }}
       />
       {/* header */}
       <Grid item style={{ width: '100%' }}>
@@ -312,14 +569,10 @@ export default function Index() {
       </Grid>
       {/* 4 cards */}
       <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
-        <Grid container>
+        <Grid container spacing={2}>
           {/* customer */}
-          <Grid
-            item
-            sx={cardStyleSx}
-            style={{ display: 'flex', width: matchesSM ? '100%' : '35%' }}
-          >
-            <Grid container direction="column">
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '35%' }}>
+            <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
                 <Typography
@@ -408,7 +661,16 @@ export default function Index() {
                           </Grid>
                           {/* add Icon */}
                           <Grid item>
-                            <IconButton style={{ padding: 0 }} disableRipple>
+                            <IconButton
+                              style={{ padding: 0 }}
+                              onClick={() => {
+                                setOpenAddCustomerModal({
+                                  active: true,
+                                  customer: null,
+                                });
+                              }}
+                              disableRipple
+                            >
                               <PersonAddAlt1Icon fontSize="small" />
                             </IconButton>
                           </Grid>
@@ -461,6 +723,7 @@ export default function Index() {
                           </Grid>
                         </Grid>
                       </Grid>
+                      {/* mileage */}
                       <Grid item style={{ marginTop: '20px', width: '100%' }}>
                         <Grid container spacing={2}>
                           {/* mileage */}
@@ -578,6 +841,186 @@ export default function Index() {
                         />
                       </Grid>
                     </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* load entry */}
+          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '20%' }}>
+            <Grid container direction="column" sx={cardStyleSx}>
+              {/* heading */}
+              <Grid item style={{ width: '100%' }}>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{
+                    flexGrow: 1,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Load Entry
+                </Typography>
+              </Grid>
+              {/* inputs */}
+              <Grid item style={{ width: '100%' }}>
+                <Grid container direction="column">
+                  {/* Rate Type */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <TextField
+                      select
+                      variant="standard"
+                      fullWidth
+                      sx={textfieldSx}
+                      SelectProps={
+                        {
+                          //native: true,
+                        }
+                      }
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">Rate Type</InputAdornment>,
+                      }}
+                      value={loadEntry.rateType}
+                      onChange={(e) =>
+                        setLoadEntry({
+                          ...loadEntry,
+                          rateType: e.target.value,
+                        })
+                      }
+                    >
+                      {rateTypeOptions.map((item, i) => (
+                        <MenuItem value={item.value} key={i}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  {/* sl */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <TextField
+                      select
+                      variant="standard"
+                      fullWidth
+                      sx={textfieldSx}
+                      SelectProps={
+                        {
+                          //native: true,
+                        }
+                      }
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">SL</InputAdornment>,
+                      }}
+                      value={loadEntry.sl}
+                      onChange={(e) =>
+                        setLoadEntry({
+                          ...loadEntry,
+                          sl: e.target.value,
+                        })
+                      }
+                    >
+                      {slOptions.map((item, i) => (
+                        <MenuItem value={item.value} key={i}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  {/* contact */}
+                  <Grid style={{ marginTop: '20px', width: '100%' }}>
+                    <Grid container spacing={1} alignItems="center">
+                      {/* contact input */}
+                      <Grid item style={{ flex: 1 }}>
+                        <Autocomplete
+                          value={loadEntry.equipment}
+                          onChange={(event, newValue) => {
+                            setLoadEntry({
+                              ...loadEntry,
+                              equipment: newValue,
+                            });
+                          }}
+                          inputValue={equipmentInputValue}
+                          onInputChange={(event, newInputValue) => {
+                            setEquipmentInputValue(newInputValue);
+                          }}
+                          id="equipmentInput"
+                          disableClearable
+                          options={equipments.flatMap((c) => {
+                            return c.values.map((v) => {
+                              return {
+                                label: v.label,
+                                id: v.value,
+                              };
+                            });
+                          })}
+                          freeSolo
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              fullWidth
+                              sx={textfieldSx}
+                              InputProps={{
+                                ...params.InputProps,
+
+                                startAdornment: (
+                                  <InputAdornment position="start">Equipment</InputAdornment>
+                                ),
+                                endAdornment: (
+                                  <InputAdornment>
+                                    <IconButton
+                                      style={{ padding: 0 }}
+                                      onClick={() =>
+                                        setSelectEquipmentModal({
+                                          active: true,
+                                          value: loadEntry.equipment,
+                                        })
+                                      }
+                                    >
+                                      <SearchIcon />
+                                    </IconButton>
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* status */}
+                  <Grid item style={{ marginTop: '20px', width: '100%' }}>
+                    <TextField
+                      select
+                      variant="standard"
+                      fullWidth
+                      sx={textfieldSx}
+                      SelectProps={
+                        {
+                          // native: true,
+                        }
+                      }
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">Status</InputAdornment>,
+                      }}
+                      value={loadEntry.status}
+                      onChange={(e) =>
+                        setLoadEntry({
+                          ...loadEntry,
+                          status: e.target.value,
+                        })
+                      }
+                    >
+                      {statusOptions.map((item, i) => (
+                        <MenuItem value={item.value} key={i}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
                 </Grid>
               </Grid>
