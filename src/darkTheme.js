@@ -32,6 +32,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+    h6: {
+      fontWeight: 600,
+    },
   },
 });
 

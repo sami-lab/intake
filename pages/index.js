@@ -18,11 +18,20 @@ import {
   MenuItem,
   Radio,
   Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MenuIcon from '@mui/icons-material/Menu';
+
 import Header from '../src/reusable/header';
 
 const sampleCustomers = [
@@ -471,6 +480,9 @@ const SelectEquipmentDialog = (props) => {
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
+
+  const matches1400 = useMediaQuery(theme.breakpoints.down('1400'));
 
   const [customers, setCustomers] = useState([...sampleCustomers]);
   const [customer, setCustomer] = useState({
@@ -511,6 +523,18 @@ export default function Index() {
     actualMargin: '',
   });
 
+  const [expanded, setExpanded] = React.useState('panel2');
+  const [commodities, setCommodities] = React.useState([
+    {
+      commodityName: '',
+      pieces: '',
+      weight: '',
+      pallets: '',
+      cube: '',
+      volume: '',
+    },
+  ]);
+
   const addCustomerHandler = (data, callback) => {
     //use callback(err) to set Error
     setCustomers([...customers, data]);
@@ -530,7 +554,8 @@ export default function Index() {
   };
   const textfieldSx = {
     '.MuiInputAdornment-root p': {
-      fontSize: '13px',
+      //fontSize: '13px',
+      paddingRight: '10px',
       fontWeight: 600,
       color: theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
     },
@@ -580,7 +605,7 @@ export default function Index() {
       <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
         <Grid container spacing={2}>
           {/* customer */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '33%' }}>
+          <Grid item style={{ display: 'flex', width: matches1400 ? '100%' : '33%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -855,9 +880,8 @@ export default function Index() {
               </Grid>
             </Grid>
           </Grid>
-
           {/* load entry */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '17%' }}>
+          <Grid item style={{ display: 'flex', width: matches1400 ? '100%' : '17%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -1036,7 +1060,7 @@ export default function Index() {
             </Grid>
           </Grid>
           {/* Trace numbers */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '25%' }}>
+          <Grid item style={{ display: 'flex', width: matches1400 ? '100%' : '25%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -1256,7 +1280,7 @@ export default function Index() {
             </Grid>
           </Grid>
           {/* Rate Amount */}
-          <Grid item style={{ display: 'flex', width: matchesSM ? '100%' : '25%' }}>
+          <Grid item style={{ display: 'flex', width: matches1400 ? '100%' : '25%' }}>
             <Grid container direction="column" sx={cardStyleSx}>
               {/* heading */}
               <Grid item style={{ width: '100%' }}>
@@ -1390,6 +1414,367 @@ export default function Index() {
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
+
+      {/* commadities */}
+      <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
+        <Accordion
+          expanded={expanded === 'panel2'}
+          onChange={(event, newExpanded) => {
+            setExpanded(newExpanded ? 'panel2' : false);
+          }}
+          sx={cardStyleSx}
+          style={{ padding: '10px 25px', borderRadius: '15px' }}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            {/* heading and add icon */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <AccordionSummary
+                    style={{ padding: 0 }}
+                    aria-controls="panel2d-content"
+                    id="panel2d-header"
+                  >
+                    <Typography
+                      variant="h6"
+                      noWrap
+                      component="div"
+                      sx={{
+                        flexGrow: 1,
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    >
+                      Commodities
+                    </Typography>
+                  </AccordionSummary>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    style={{ padding: 0 }}
+                    // onClick={() => {
+                    //   setOpenAddCustomerModal({
+                    //     active: true,
+                    //     customer: null,
+                    //   });
+                    // }}
+                    disableRipple
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* info and Arrow */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={matchesMD ? 2 : 5}>
+                {/* Commodity Name */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Commodity: Commodity Name
+                  </Typography>
+                </Grid>
+                {/* Pieces */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Pieces: 000
+                  </Typography>
+                </Grid>
+                {/* Weight */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Weight: 000
+                  </Typography>
+                </Grid>
+                {/* Pallets */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Pallets: 000
+                  </Typography>
+                </Grid>
+                {/* Cube */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Cube: 000
+                  </Typography>
+                </Grid>
+                {/* Volume */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Volume: 000
+                  </Typography>
+                </Grid>
+                {/* Arrow */}
+                <Grid item>
+                  {expanded === 'panel2' ? (
+                    <KeyboardArrowUpIcon fontSize="large" />
+                  ) : (
+                    <KeyboardArrowDownIcon fontSize="large" />
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
+            <Grid container direction="column">
+              {commodities.map((item, i) => (
+                <Grid item key={i} style={{ marginTop: '15px' }}>
+                  <Grid
+                    container
+                    justifyContent="space-between"
+                    style={{
+                      padding: '30px 30px',
+                      border: '1px solid #E0E1E3',
+                      borderRadius: '15px',
+                      gap: '40px',
+                    }}
+                  >
+                    {/* commodityName */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="Commodity Name"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">Commodity</InputAdornment>
+                          ),
+                        }}
+                        value={item.commodityName}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.commodityName = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* Pieces */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="Code"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">Pieces</InputAdornment>,
+                        }}
+                        value={item.pieces}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.pieces = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* weight */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="000"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">Weight</InputAdornment>,
+                        }}
+                        value={item.weight}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.weight = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* pallets */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="000"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">Pallets</InputAdornment>,
+                        }}
+                        value={item.pallets}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.pallets = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* cube */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="000"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">Cube</InputAdornment>,
+                        }}
+                        value={item.cube}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.cube = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* volume */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        placeholder="000"
+                        fullWidth
+                        sx={textfieldSx}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">Volume</InputAdornment>,
+                        }}
+                        value={item.volume}
+                        onChange={(e) =>
+                          setCommodities((c) =>
+                            c.map((x, ind) => {
+                              if (i === ind) {
+                                x.volume = e.target.value;
+                              }
+                              return x;
+                            })
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* button */}
+                    <Grid item>
+                      <Grid container style={{ gap: '20px' }}>
+                        {/* edit */}
+                        <Grid item>
+                          <IconButton style={{ padding: 0 }}>
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Grid>
+                        {/* delete */}
+                        <Grid item>
+                          <IconButton style={{ padding: 0 }}>
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Grid>
+                        {/* Menu */}
+                        <Grid item>
+                          <IconButton style={{ padding: 0 }}>
+                            <MenuIcon fontSize="small" />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
       </Grid>
     </Grid>
   );
