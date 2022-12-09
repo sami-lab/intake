@@ -162,6 +162,13 @@ const statusOptions = [
     value: 'Planned',
   },
 ];
+
+const billToOptions = [
+  {
+    label: 'Customer',
+    value: 'Customer',
+  },
+];
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -775,6 +782,238 @@ const EditCommodityDialog = (props) => {
     </Dialog>
   );
 };
+
+const EditChargeDialog = (props) => {
+  const theme = useTheme();
+  const [data, setData] = useState({
+    billTo: '',
+    chargeCode: '',
+    description: '',
+    quantity: '',
+    rate: '',
+    amount: '',
+  });
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data);
+    }
+  }, []);
+
+  const submitHandler = () => {
+    setError('');
+    if (
+      data.billTo.trim() === '' ||
+      data.chargeCode.trim() === '' ||
+      data.description.trim() === '' ||
+      data.quantity.trim() === '' ||
+      data.rate.trim() === '' ||
+      data.amount.trim() === ''
+    ) {
+      setError('Fill all field to Continue');
+      return;
+    }
+    props.submitHandler(data, (err) => {
+      setError(err);
+    });
+  };
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Edit Charge
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* billTo chargeCode  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* billTo */}
+              <Grid item xs={6}>
+                <TextField
+                  select
+                  variant="standard"
+                  fullWidth
+                  label="Bill To"
+                  placeholder="Bill To"
+                  value={data.billTo}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      billTo: e.target.value,
+                    })
+                  }
+                >
+                  {billToOptions.map((item, i) => (
+                    <MenuItem value={item.value} key={i}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              {/* chargeCode */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Charge Code"
+                  placeholder="Charge Code"
+                  value={data.chargeCode}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      chargeCode: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* description quantity  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* description */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Description"
+                  placeholder="Description"
+                  value={data.description}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* quantity */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Quantity"
+                  placeholder="Quantity"
+                  value={data.quantity}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      quantity: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* rate amount  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* rate */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Rate"
+                  placeholder="Rate"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  value={data.rate}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      rate: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* Amount */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Amount"
+                  placeholder="Amount"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  value={data.amount}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      amount: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {error !== '' && (
+            <Grid item style={{ marginTop: '1em', width: '100%' }}>
+              <Alert severity="warning">{error}</Alert>
+            </Grid>
+          )}
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* save */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  primary
+                  onClick={submitHandler}
+                >
+                  Save
+                </Button>
+              </Grid>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.handleClose}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -842,6 +1081,26 @@ export default function Index() {
     index: -1,
     data: null,
   });
+  const [charges, setCharges] = React.useState([
+    {
+      billTo: '',
+      chargeCode: '',
+      description: '',
+      quantity: '',
+      rate: '',
+      amount: '',
+    },
+  ]);
+  const [deleteChargeModal, setDeleteChargeModal] = React.useState({
+    active: false,
+    index: -1,
+    name: '',
+  });
+  const [editChargeModal, setEditChargeModal] = React.useState({
+    active: false,
+    index: -1,
+    data: null,
+  });
 
   const addCustomerHandler = (data, callback) => {
     //use callback(err) to set Error
@@ -852,6 +1111,22 @@ export default function Index() {
     });
   };
 
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    // const newIds = [];
+
+    // result.forEach((item, i) => {
+    //   newIds.push(item.id + '-' + (i + 1));
+
+    //   // newIds.push({position: i+1,id: item.id})
+    // });
+    //reOrderApi(newIds);
+    return result;
+  };
+
   const commoditiesDragEnd = async (result) => {
     // dropped outside the list
     if (!result.destination) {
@@ -860,6 +1135,15 @@ export default function Index() {
 
     const items = reorder(commodities, result.source.index, result.destination.index);
     setCommodities(items);
+  };
+  const chargesDragEnd = async (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(charges, result.source.index, result.destination.index);
+    setCharges(items);
   };
   const cardStyleSx = {
     boxShadow:
@@ -879,21 +1163,6 @@ export default function Index() {
     },
   };
 
-  const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    // const newIds = [];
-
-    // result.forEach((item, i) => {
-    //   newIds.push(item.id + '-' + (i + 1));
-
-    //   // newIds.push({position: i+1,id: item.id})
-    // });
-    //reOrderApi(newIds);
-    return result;
-  };
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
@@ -985,6 +1254,55 @@ export default function Index() {
           );
 
           setEditCommodityModal({
+            active: false,
+            index: -1,
+            data: null,
+          });
+        }}
+      />
+
+      <DeleteModal
+        open={deleteChargeModal.active}
+        handleClose={() => {
+          setDeleteChargeModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+        title="Charge"
+        element={deleteChargeModal.name}
+        submitHandler={() => {
+          setCharges(charges.filter((c, i) => i !== deleteChargeModal.index));
+          setDeleteChargeModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+      />
+
+      <EditChargeDialog
+        open={editChargeModal.active}
+        handleClose={() => {
+          setEditChargeModal({
+            active: false,
+            index: -1,
+            data: null,
+          });
+        }}
+        data={editChargeModal.data}
+        submitHandler={(data, callback) => {
+          setCharges(
+            charges.map((c, i) => {
+              if (i === editChargeModal.index) {
+                return data;
+              }
+              return c;
+            })
+          );
+
+          setEditChargeModal({
             active: false,
             index: -1,
             data: null,
@@ -2198,6 +2516,371 @@ export default function Index() {
                                               active: true,
                                               index: i,
                                               name: item.commodityName,
+                                            });
+                                          }}
+                                        >
+                                          <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                      {/* Menu */}
+                                      <Grid item>
+                                        <IconButton style={{ padding: 0 }}>
+                                          <MenuIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </div>
+                            )}
+                          </Draggable>
+                        </Grid>
+                      ))}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+
+      {/* charges */}
+      <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
+        <Accordion
+          expanded={expanded === 'panel3'}
+          onChange={(event, newExpanded) => {
+            setExpanded(newExpanded ? 'panel3' : false);
+          }}
+          sx={cardStyleSx}
+          style={{ padding: '10px 25px', borderRadius: '15px' }}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            {/* heading and add icon */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <AccordionSummary
+                    style={{ padding: 0 }}
+                    aria-controls="panel3d-content"
+                    id="panel3d-header"
+                  >
+                    <Typography
+                      variant="h6"
+                      noWrap
+                      component="div"
+                      sx={{
+                        flexGrow: 1,
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    >
+                      Charges
+                    </Typography>
+                  </AccordionSummary>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    style={{ padding: 0 }}
+                    // onClick={() => {
+                    //   setOpenAddCustomerModal({
+                    //     active: true,
+                    //     customer: null,
+                    //   });
+                    // }}
+                    disableRipple
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* info and Arrow */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={matchesMD ? 2 : 5}>
+                {/* Carrier  */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Carrier: $000.00
+                  </Typography>
+                </Grid>
+                {/* Customer */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Customer: $000.00
+                  </Typography>
+                </Grid>
+
+                {/* Arrow */}
+                <Grid item>
+                  {expanded === 'panel3' ? (
+                    <KeyboardArrowUpIcon fontSize="large" />
+                  ) : (
+                    <KeyboardArrowDownIcon fontSize="large" />
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
+            <Grid container direction="column">
+              <DragDropContext onDragEnd={chargesDragEnd}>
+                <Droppable droppableId="characters">
+                  {(provided, snapshot) => (
+                    <div
+                      className="characters"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {charges.map((item, i) => (
+                        <Grid item key={i} style={{ marginTop: '15px' }}>
+                          <Draggable key={`${i}`} draggableId={`${i}`} index={i}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                <Grid
+                                  container
+                                  justifyContent="space-between"
+                                  style={{
+                                    padding: '30px 30px',
+                                    border: '1px solid #E0E1E3',
+                                    borderRadius: '15px',
+                                    gap: '40px',
+                                  }}
+                                >
+                                  {/* billTo */}
+                                  <Grid item>
+                                    <TextField
+                                      select
+                                      variant="standard"
+                                      placeholder="Bill To"
+                                      fullWidth
+                                      style={{ minWidth: '270px' }}
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Bill To</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.billTo}
+                                      onChange={(e) =>
+                                        setCharges((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.billTo = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    >
+                                      {billToOptions.map((item, i) => (
+                                        <MenuItem value={item.value} key={i}>
+                                          {item.label}
+                                        </MenuItem>
+                                      ))}
+                                    </TextField>
+                                  </Grid>
+                                  {/* chargeCode */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="Code"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">
+                                            Charge Code
+                                          </InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.chargeCode}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.chargeCode = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* description */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="Charge Description"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">
+                                            Description
+                                          </InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.description}
+                                      onChange={(e) =>
+                                        setCharges((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.description = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* quantity */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Quantity</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.quantity}
+                                      onChange={(e) =>
+                                        setCharges((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.quantity = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* rate */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000.00"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <>
+                                            <InputAdornment position="start">Rate</InputAdornment>$
+                                          </>
+                                        ),
+                                      }}
+                                      value={item.rate}
+                                      onChange={(e) =>
+                                        setCharges((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.rate = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* amount */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000.00"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <>
+                                            <InputAdornment position="start">Amount</InputAdornment>
+                                            $
+                                          </>
+                                        ),
+                                      }}
+                                      value={item.amount}
+                                      onChange={(e) =>
+                                        setCharges((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.amount = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* button */}
+                                  <Grid item>
+                                    <Grid container style={{ gap: '20px' }}>
+                                      {/* edit */}
+                                      <Grid item>
+                                        <IconButton
+                                          style={{ padding: 0 }}
+                                          onClick={() => {
+                                            setEditChargeModal({
+                                              active: true,
+                                              index: i,
+                                              data: item,
+                                            });
+                                          }}
+                                        >
+                                          <EditIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                      {/* delete */}
+                                      <Grid item>
+                                        <IconButton
+                                          style={{ padding: 0 }}
+                                          onClick={() => {
+                                            setDeleteChargeModal({
+                                              active: true,
+                                              index: i,
+                                              name: item.chargeCode,
                                             });
                                           }}
                                         >
