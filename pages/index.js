@@ -477,6 +477,303 @@ const SelectEquipmentDialog = (props) => {
     </Dialog>
   );
 };
+
+const DeleteModal = (props) => {
+  const theme = useTheme();
+
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color: theme.palette.mode === 'dark' ? theme.palette.light.main : 'red',
+                  }}
+                >
+                  Delete {props.title}
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* description */}
+          <Grid item style={{ width: '100%', marginTop: '20px' }}>
+            <Typography variant="subtitle1">
+              You are about to delete "{props.element}", are you sure?
+            </Typography>
+          </Grid>
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* delete */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{
+                    boxShadow: 'none',
+                    minWidth: '60px',
+                    background: theme.palette.mode === 'dark' ? theme.palette.light.main : 'red',
+                  }}
+                  primary
+                  onClick={props.submitHandler}
+                >
+                  Delete
+                </Button>
+              </Grid>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.handleClose}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const EditCommodityDialog = (props) => {
+  const theme = useTheme();
+  const [data, setData] = useState({
+    commodityName: '',
+    pieces: '',
+    weight: '',
+    pallets: '',
+    cube: '',
+    volume: '',
+  });
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data);
+    }
+  }, []);
+
+  const submitHandler = () => {
+    setError('');
+    if (
+      data.commodityName.trim() === '' ||
+      data.pieces.trim() === '' ||
+      data.weight.trim() === '' ||
+      data.pallets.trim() === '' ||
+      data.cube.trim() === '' ||
+      data.volume.trim() === ''
+    ) {
+      setError('Fill all field to Continue');
+      return;
+    }
+    props.submitHandler(data, (err) => {
+      setError(err);
+    });
+  };
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Edit Commodity
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* commodityName Pieces  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* commodityName */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Commodity Name"
+                  placeholder="Commodity Name"
+                  value={data.commodityName}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      commodityName: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* Pieces */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Pieces"
+                  placeholder="Pieces"
+                  value={data.pieces}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      pieces: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Weight pallets  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* commodityName */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Weight"
+                  placeholder="Weight"
+                  value={data.weight}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      weight: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* pallets */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Pallets"
+                  placeholder="Pallets"
+                  value={data.pallets}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      pallets: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* cube volume  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* cube */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Cube"
+                  placeholder="Cube"
+                  value={data.cube}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      cube: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* volume */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Volume"
+                  placeholder="Volume"
+                  value={data.volume}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      volume: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {error !== '' && (
+            <Grid item style={{ marginTop: '1em', width: '100%' }}>
+              <Alert severity="warning">{error}</Alert>
+            </Grid>
+          )}
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* save */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  primary
+                  onClick={submitHandler}
+                >
+                  Save
+                </Button>
+              </Grid>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.handleClose}
+                >
+                  Clear
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -534,6 +831,16 @@ export default function Index() {
       volume: '',
     },
   ]);
+  const [deleteCommodityModal, setDeleteCommodityModal] = React.useState({
+    active: false,
+    index: -1,
+    name: '',
+  });
+  const [editCommodityModal, setEditCommodityModal] = React.useState({
+    active: false,
+    index: -1,
+    data: null,
+  });
 
   const addCustomerHandler = (data, callback) => {
     //use callback(err) to set Error
@@ -543,6 +850,7 @@ export default function Index() {
       customer: null,
     });
   };
+
   const cardStyleSx = {
     boxShadow:
       theme.palette.mode === 'dark'
@@ -594,6 +902,55 @@ export default function Index() {
           setSelectEquipmentModal({
             active: false,
             value: '',
+          });
+        }}
+      />
+
+      <DeleteModal
+        open={deleteCommodityModal.active}
+        handleClose={() => {
+          setDeleteCommodityModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+        title="Commodity"
+        element={deleteCommodityModal.name}
+        submitHandler={() => {
+          setCommodities(commodities.filter((c, i) => i !== deleteCommodityModal.index));
+          setDeleteCommodityModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+      />
+
+      <EditCommodityDialog
+        open={editCommodityModal.active}
+        handleClose={() => {
+          setEditCommodityModal({
+            active: false,
+            index: -1,
+            data: null,
+          });
+        }}
+        data={editCommodityModal.data}
+        submitHandler={(data, callback) => {
+          setCommodities(
+            commodities.map((c, i) => {
+              if (i === deleteCommodityModal.index) {
+                return data;
+              }
+              return c;
+            })
+          );
+
+          setEditCommodityModal({
+            active: false,
+            index: -1,
+            data: null,
           });
         }}
       />
@@ -1751,13 +2108,31 @@ export default function Index() {
                       <Grid container style={{ gap: '20px' }}>
                         {/* edit */}
                         <Grid item>
-                          <IconButton style={{ padding: 0 }}>
+                          <IconButton
+                            style={{ padding: 0 }}
+                            onClick={() => {
+                              setEditCommodityModal({
+                                active: true,
+                                index: i,
+                                data: item,
+                              });
+                            }}
+                          >
                             <EditIcon fontSize="small" />
                           </IconButton>
                         </Grid>
                         {/* delete */}
                         <Grid item>
-                          <IconButton style={{ padding: 0 }}>
+                          <IconButton
+                            style={{ padding: 0 }}
+                            onClick={() => {
+                              setDeleteCommodityModal({
+                                active: true,
+                                index: i,
+                                name: item.commodityName,
+                              });
+                            }}
+                          >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Grid>
