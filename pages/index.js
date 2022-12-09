@@ -31,6 +31,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import Header from '../src/reusable/header';
 
@@ -851,6 +852,15 @@ export default function Index() {
     });
   };
 
+  const commoditiesDragEnd = async (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(commodities, result.source.index, result.destination.index);
+    setCommodities(items);
+  };
   const cardStyleSx = {
     boxShadow:
       theme.palette.mode === 'dark'
@@ -869,6 +879,33 @@ export default function Index() {
     },
   };
 
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    // const newIds = [];
+
+    // result.forEach((item, i) => {
+    //   newIds.push(item.id + '-' + (i + 1));
+
+    //   // newIds.push({position: i+1,id: item.id})
+    // });
+    //reOrderApi(newIds);
+    return result;
+  };
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: 'none',
+
+    margin: `0 0 8px 0`,
+    //marginTop: '2em',
+    // change background colour if dragging
+    background: 'inherit',
+    overflow: 'hidden',
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
   const selectedCustomer = customers.find((c) => c.id === customer.contact);
 
   return (
@@ -940,7 +977,7 @@ export default function Index() {
         submitHandler={(data, callback) => {
           setCommodities(
             commodities.map((c, i) => {
-              if (i === deleteCommodityModal.index) {
+              if (i === editCommodityModal.index) {
                 return data;
               }
               return c;
@@ -1951,202 +1988,240 @@ export default function Index() {
 
           <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
             <Grid container direction="column">
-              {commodities.map((item, i) => (
-                <Grid item key={i} style={{ marginTop: '15px' }}>
-                  <Grid
-                    container
-                    justifyContent="space-between"
-                    style={{
-                      padding: '30px 30px',
-                      border: '1px solid #E0E1E3',
-                      borderRadius: '15px',
-                      gap: '40px',
-                    }}
-                  >
-                    {/* commodityName */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="Commodity Name"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">Commodity</InputAdornment>
-                          ),
-                        }}
-                        value={item.commodityName}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.commodityName = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* Pieces */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="Code"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">Pieces</InputAdornment>,
-                        }}
-                        value={item.pieces}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.pieces = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* weight */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="000"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">Weight</InputAdornment>,
-                        }}
-                        value={item.weight}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.weight = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* pallets */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="000"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">Pallets</InputAdornment>,
-                        }}
-                        value={item.pallets}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.pallets = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* cube */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="000"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">Cube</InputAdornment>,
-                        }}
-                        value={item.cube}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.cube = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* volume */}
-                    <Grid item>
-                      <TextField
-                        variant="standard"
-                        placeholder="000"
-                        fullWidth
-                        sx={textfieldSx}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">Volume</InputAdornment>,
-                        }}
-                        value={item.volume}
-                        onChange={(e) =>
-                          setCommodities((c) =>
-                            c.map((x, ind) => {
-                              if (i === ind) {
-                                x.volume = e.target.value;
-                              }
-                              return x;
-                            })
-                          )
-                        }
-                      />
-                    </Grid>
-                    {/* button */}
-                    <Grid item>
-                      <Grid container style={{ gap: '20px' }}>
-                        {/* edit */}
-                        <Grid item>
-                          <IconButton
-                            style={{ padding: 0 }}
-                            onClick={() => {
-                              setEditCommodityModal({
-                                active: true,
-                                index: i,
-                                data: item,
-                              });
-                            }}
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
+              <DragDropContext onDragEnd={commoditiesDragEnd}>
+                <Droppable droppableId="characters">
+                  {(provided, snapshot) => (
+                    <div
+                      className="characters"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {commodities.map((item, i) => (
+                        <Grid item key={i} style={{ marginTop: '15px' }}>
+                          <Draggable key={`${i}`} draggableId={`${i}`} index={i}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                <Grid
+                                  container
+                                  justifyContent="space-between"
+                                  style={{
+                                    padding: '30px 30px',
+                                    border: '1px solid #E0E1E3',
+                                    borderRadius: '15px',
+                                    gap: '40px',
+                                  }}
+                                >
+                                  {/* commodityName */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="Commodity Name"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">
+                                            Commodity
+                                          </InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.commodityName}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.commodityName = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* Pieces */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="Code"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Pieces</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.pieces}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.pieces = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* weight */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Weight</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.weight}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.weight = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* pallets */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Pallets</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.pallets}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.pallets = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* cube */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Cube</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.cube}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.cube = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* volume */}
+                                  <Grid item>
+                                    <TextField
+                                      variant="standard"
+                                      placeholder="000"
+                                      fullWidth
+                                      sx={textfieldSx}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">Volume</InputAdornment>
+                                        ),
+                                      }}
+                                      value={item.volume}
+                                      onChange={(e) =>
+                                        setCommodities((c) =>
+                                          c.map((x, ind) => {
+                                            if (i === ind) {
+                                              x.volume = e.target.value;
+                                            }
+                                            return x;
+                                          })
+                                        )
+                                      }
+                                    />
+                                  </Grid>
+                                  {/* button */}
+                                  <Grid item>
+                                    <Grid container style={{ gap: '20px' }}>
+                                      {/* edit */}
+                                      <Grid item>
+                                        <IconButton
+                                          style={{ padding: 0 }}
+                                          onClick={() => {
+                                            setEditCommodityModal({
+                                              active: true,
+                                              index: i,
+                                              data: item,
+                                            });
+                                          }}
+                                        >
+                                          <EditIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                      {/* delete */}
+                                      <Grid item>
+                                        <IconButton
+                                          style={{ padding: 0 }}
+                                          onClick={() => {
+                                            setDeleteCommodityModal({
+                                              active: true,
+                                              index: i,
+                                              name: item.commodityName,
+                                            });
+                                          }}
+                                        >
+                                          <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                      {/* Menu */}
+                                      <Grid item>
+                                        <IconButton style={{ padding: 0 }}>
+                                          <MenuIcon fontSize="small" />
+                                        </IconButton>
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </div>
+                            )}
+                          </Draggable>
                         </Grid>
-                        {/* delete */}
-                        <Grid item>
-                          <IconButton
-                            style={{ padding: 0 }}
-                            onClick={() => {
-                              setDeleteCommodityModal({
-                                active: true,
-                                index: i,
-                                name: item.commodityName,
-                              });
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Grid>
-                        {/* Menu */}
-                        <Grid item>
-                          <IconButton style={{ padding: 0 }}>
-                            <MenuIcon fontSize="small" />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              ))}
+                      ))}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </Grid>
           </AccordionDetails>
         </Accordion>
