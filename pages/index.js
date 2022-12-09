@@ -1061,6 +1061,30 @@ export default function Index() {
   });
 
   const [expanded, setExpanded] = React.useState('panel2');
+
+  const [carrier, setCarrier] = useState([]);
+  const [stops, setStops] = React.useState([
+    {
+      contact: '',
+      pickup: '',
+      startZone: '',
+      phone: '',
+      ext: '',
+      startDate: '',
+      endDate: '',
+    },
+  ]);
+  const [deleteStopModal, setDeleteStopModal] = React.useState({
+    active: false,
+    index: -1,
+    name: '',
+  });
+  const [editStopModal, setEditStopModal] = React.useState({
+    active: false,
+    index: -1,
+    data: null,
+  });
+
   const [commodities, setCommodities] = React.useState([
     {
       commodityName: '',
@@ -2128,6 +2152,140 @@ export default function Index() {
         </Grid>
       </Grid>
 
+      {/* Stops */}
+      <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
+        <Accordion
+          expanded={expanded === 'panel1'}
+          onChange={(event, newExpanded) => {
+            setExpanded(newExpanded ? 'panel1' : false);
+          }}
+          sx={cardStyleSx}
+          style={{ padding: '10px 25px', borderRadius: '15px' }}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            {/* heading and add icon */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <AccordionSummary
+                    style={{ padding: 0 }}
+                    aria-controls="panel1d-content"
+                    id="panel1d-header"
+                  >
+                    <Typography
+                      variant="h6"
+                      noWrap
+                      component="div"
+                      sx={{
+                        flexGrow: 1,
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    >
+                      Stops
+                    </Typography>
+                  </AccordionSummary>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    style={{ padding: 0 }}
+                    // onClick={() => {
+                    //   setOpenAddCustomerModal({
+                    //     active: true,
+                    //     customer: null,
+                    //   });
+                    // }}
+                    disableRipple
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.light.main
+                            : theme.palette.primary.main,
+                      }}
+                    />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* info and Arrow */}
+            <Grid item>
+              <Grid container alignItems="center" spacing={matchesMD ? 2 : 5}>
+                {/* Origin */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Origin: City,State
+                  </Typography>
+                </Grid>
+                {/* Destination */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Destination: City,State
+                  </Typography>
+                </Grid>
+                {/* mileage */}
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      color:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.light.main
+                          : theme.palette.primary.main,
+                    }}
+                  >
+                    Total Mileage: 000.00
+                  </Typography>
+                </Grid>
+                {/* Arrow */}
+                <Grid item>
+                  {expanded === 'panel1' ? (
+                    <KeyboardArrowUpIcon fontSize="large" />
+                  ) : (
+                    <KeyboardArrowDownIcon fontSize="large" />
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
+            <Grid container>
+              {/* left drag inputs */}
+              <Grid item xs={12} lg={8}></Grid>
+              {/* right map carrier */}
+              <Grid item xs={12} lg={4}></Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
       {/* commadities */}
       <Grid item className="container" style={{ width: '100%', marginTop: '30px' }}>
         <Accordion
