@@ -1750,8 +1750,6 @@ export default function Index() {
   const [locations, setLocations] = useState(sampleLocations);
   const [showAddLocationDialog, setAddLocationDialog] = useState(false);
 
-  const [carrier, setCarrier] = useState([]);
-
   const [stops, setStops] = React.useState([
     {
       contact: '',
@@ -1782,6 +1780,12 @@ export default function Index() {
     data: null,
   });
 
+  const [carrier, setCarrier] = useState(null);
+  const [carrierInput, setCarrierInput] = useState('');
+  const [changeCarrierDialog, setChangeCarrierDialog] = React.useState({
+    active: false,
+    carrier: null,
+  });
   const [commodities, setCommodities] = React.useState([
     {
       commodityName: '',
@@ -2131,6 +2135,35 @@ export default function Index() {
             active: false,
             index: -1,
             data: null,
+          });
+        }}
+      />
+
+      <SearchLocationDialog
+        open={changeCarrierDialog.active}
+        handleClose={() => {
+          setChangeCarrierDialog({
+            active: false,
+            carrier: null,
+          });
+        }}
+        value={changeCarrierDialog.carrier?.id}
+        onChange={(val) => {
+          let newLoc = locations.find((lo) => lo.id === val);
+          setCarrier(newLoc ? newLoc : null);
+          setChangeCarrierDialog({
+            ...changeCarrierDialog,
+            carrier: newLoc ? newLoc : null,
+          });
+        }}
+        locations={locations}
+        onClear={() => {
+          setCarrier(null);
+          setCarrierInput('');
+
+          setChangeCarrierDialog({
+            ...changeLocationDialog,
+            carrier: null,
           });
         }}
       />
@@ -3569,7 +3602,136 @@ export default function Index() {
                 </Grid>
               </Grid>
               {/* right map carrier */}
-              <Grid item xs={12} lg={4}></Grid>
+              <Grid item xs={12} lg={4}>
+                <Grid container spacing={4}>
+                  {/* map */}
+                  <Grid item style={{ marginTop: '2em' }}></Grid>
+                  {/* carrier customer search Carrier */}
+                  <Grid item style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        width: '100%',
+                        padding: '30px 30px',
+                        border: '1px solid #E0E1E3',
+                        borderRadius: '15px',
+                      }}
+                    >
+                      <Grid container spacing={2}>
+                        {/* carrier */}
+                        {carrier !== null && (
+                          <Grid item md={6} xs={12}>
+                            <Grid container spacing={1} justifyContent="space-between">
+                              {/* carrier Name */}
+                              <Grid item>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    fontWeight: 500,
+                                    color:
+                                      theme.palette.mode === 'dark'
+                                        ? theme.palette.light.main
+                                        : theme.palette.primary.main,
+                                  }}
+                                >
+                                  {carrier?.name}
+                                </Typography>
+                              </Grid>
+                              {/* search */}
+                              <Grid item>
+                                <IconButton
+                                  style={{ padding: 0 }}
+                                  onClick={() => {
+                                    setChangeCarrierDialog({
+                                      active: true,
+                                      carrier: carrier,
+                                    });
+                                  }}
+                                >
+                                  <SearchIcon />
+                                </IconButton>
+                              </Grid>
+                            </Grid>
+                            {/* location */}
+                            <Typography
+                              variant="body2"
+                              style={{
+                                fontSize: '13px',
+                                marginTop: '4px',
+                              }}
+                            >
+                              {carrier?.streetOne} <br />
+                              {carrier?.streetTwo}
+                              <br />
+                              {carrier?.state}, {carrier?.city}
+                              <br />
+                              {carrier?.postalCode}, {carrier?.country}
+                            </Typography>
+                          </Grid>
+                        )}
+                        {/* customer */}
+                        <Grid item md={6} xs={12}></Grid>
+                      </Grid>
+                    </div>
+                    {/* search carrier */}
+                    <div
+                      style={{
+                        width: '100%',
+                        padding: '30px 30px',
+                        border: '1px dotted #E0E1E3',
+                        borderRadius: '15px',
+                        marginTop: '10px',
+                      }}
+                    >
+                      <Autocomplete
+                        value={carrier?.id}
+                        onChange={(event, newValue) => {
+                          let newLoc = locations.find((lo) => lo.id === newValue.id);
+                          setCarrier(newLoc ? newLoc : null);
+                        }}
+                        inputValue={carrierInput}
+                        onInputChange={(event, newInputValue) => {
+                          setCarrierInput(newInputValue);
+                        }}
+                        id="locationInput3"
+                        disableClearable
+                        options={locations.map((c) => {
+                          return {
+                            label: `${c.streetOne ? c.streetOne : ''} ${
+                              c.streetTwo ? c.streetTwo : ''
+                            } ${c.state} ${c.city} ${c.postalCode} ${c.country}`,
+                            id: c.id,
+                          };
+                        })}
+                        freeSolo
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            InputProps={{
+                              ...params.InputProps,
+
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    style={{ padding: 0 }}
+                                    onClick={() => setAddLocationDialog(true)}
+                                  >
+                                    <AddCircleIcon />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                            fullWidth
+                            placeholder="Carrier Search"
+                            sx={textfieldSx}
+                          />
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
           </AccordionDetails>
         </Accordion>
