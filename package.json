@@ -21,7 +21,8 @@
     "prop-types": "latest",
     "react": "latest",
     "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-uuid": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "latest",

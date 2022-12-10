@@ -32,8 +32,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import uuid from 'react-uuid';
 
 import Header from '../src/reusable/header';
+import countriesData from '../src/data/countries.json';
 
 const sampleCustomers = [
   {
@@ -167,6 +169,39 @@ const billToOptions = [
   {
     label: 'Customer',
     value: 'Customer',
+  },
+];
+
+const sampleLocations = [
+  {
+    id: 1,
+    name: 'US Airline',
+    streetOne: '1234',
+    streetTwo: 'Adress Lane',
+    city: 'Jacksonville',
+    state: 'FL',
+    postalCode: '32203',
+    country: 'US',
+  },
+  {
+    id: 2,
+    name: 'Karachi Airline',
+    streetOne: '1234',
+    streetTwo: 'Adress Lane',
+    city: 'Karachi',
+    state: 'Sindh',
+    postalCode: '32203',
+    country: 'Pakistan',
+  },
+  {
+    id: 3,
+    name: 'France Airline',
+    streetOne: '1234',
+    streetTwo: 'Adress Lane',
+    city: 'Paris',
+    state: 'FL',
+    postalCode: '32203',
+    country: 'France',
   },
 ];
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -1014,6 +1049,377 @@ const EditChargeDialog = (props) => {
     </Dialog>
   );
 };
+
+const AddLocationDialog = (props) => {
+  const theme = useTheme();
+  const [data, setData] = useState({
+    id: uuid(),
+    name: '',
+    streetOne: '',
+    streetTwo: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+  });
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data);
+    }
+  }, []);
+
+  const submitHandler = () => {
+    setError('');
+    if (
+      data.name.trim() === '' ||
+      data.streetOne.trim() === '' ||
+      data.streetTwo.trim() === '' ||
+      data.city.trim() === '' ||
+      data.state.trim() === '' ||
+      data.postalCode.trim() === '' ||
+      data.country.trim() === ''
+    ) {
+      setError('Fill all field to Continue');
+      return;
+    }
+    props.submitHandler(data, (err) => {
+      setError(err);
+    });
+  };
+
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Save Location
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* name */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <TextField
+              variant="standard"
+              fullWidth
+              label="Location Name"
+              placeholder="Location name"
+              value={data.name}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  name: e.target.value,
+                })
+              }
+            />
+          </Grid>
+          {/* Street One */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <TextField
+              variant="standard"
+              fullWidth
+              label="Street One"
+              placeholder="Street One"
+              value={data.streetOne}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  streetOne: e.target.value,
+                })
+              }
+            />
+          </Grid>
+          {/* Street Two */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <TextField
+              variant="standard"
+              fullWidth
+              label="Street Two"
+              placeholder="Street Two"
+              value={data.streetTwo}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  streetTwo: e.target.value,
+                })
+              }
+            />
+          </Grid>
+          {/* Country State  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* Country */}
+              <Grid item xs={6}>
+                <TextField
+                  select
+                  variant="standard"
+                  fullWidth
+                  label="Country"
+                  placeholder="Country"
+                  value={data.country}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      state: '',
+                      country: e.target.value,
+                    })
+                  }
+                >
+                  {countriesData.map((item, i) => (
+                    <MenuItem key={i} value={item.country}>
+                      {item.country}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              {/* State */}
+              <Grid item xs={6}>
+                <TextField
+                  select
+                  variant="standard"
+                  fullWidth
+                  label="State"
+                  placeholder="State"
+                  value={data.state}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      state: e.target.value,
+                    })
+                  }
+                >
+                  {countriesData
+                    .find((x) => x.country === data.country)
+                    ?.states.map((item, i) => (
+                      <MenuItem key={i} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* City PostalCode  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* City */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="City"
+                  placeholder="City"
+                  value={data.city}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      city: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* Postal code */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Postal Code"
+                  placeholder="Postal Code"
+                  value={data.postalCode}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      postalCode: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {error !== '' && (
+            <Grid item style={{ marginTop: '1em', width: '100%' }}>
+              <Alert severity="warning">{error}</Alert>
+            </Grid>
+          )}
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* save */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  primary
+                  onClick={submitHandler}
+                >
+                  Save
+                </Button>
+              </Grid>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.handleClose}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const SearchLocationDialog = (props) => {
+  const theme = useTheme();
+  const [value, setValue] = React.useState(props.value);
+
+  const [changeLocationInput, setChangeLocationInput] = React.useState('');
+
+  useEffect(() => {
+    console.log(props.value, '--====================-');
+    if (props.value) {
+      //setValue(`${props.value}`);
+      let c = props.locations.find((loc) => loc.id == props.value);
+      console.log(c);
+      setChangeLocationInput(
+        `${c.streetOne ? c.streetOne : ''} ${c.streetTwo ? c.streetTwo : ''} ${c.state} ${c.city} ${
+          c.postalCode
+        } ${c.country}`
+      );
+    } else {
+      setValue('');
+      setChangeLocationInput('');
+    }
+  }, [props.value]);
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Save Location
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Autocomplete
+              value={value}
+              onChange={(event, newValue) => {
+                props.onChange(newValue.id);
+              }}
+              inputValue={changeLocationInput}
+              onInputChange={(event, newInputValue) => {
+                setChangeLocationInput(newInputValue);
+              }}
+              id="locationInput1"
+              disableClearable
+              options={props.locations.map((c) => {
+                return {
+                  label: `${c.streetOne ? c.streetOne : ''} ${c.streetTwo ? c.streetTwo : ''} ${
+                    c.state
+                  } ${c.city} ${c.postalCode} ${c.country}`,
+                  id: c.id,
+                };
+              })}
+              freeSolo
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  InputProps={{
+                    ...params.InputProps,
+
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                  placeholder="Search Location"
+                  // sx={textfieldSx}
+                />
+              )}
+            />
+          </Grid>
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.onClear}
+                >
+                  Clear
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -1062,7 +1468,11 @@ export default function Index() {
 
   const [expanded, setExpanded] = React.useState('panel2');
 
+  const [locations, setLocations] = useState(sampleLocations);
+  const [showAddLocationDialog, setAddLocationDialog] = useState(false);
+
   const [carrier, setCarrier] = useState([]);
+
   const [stops, setStops] = React.useState([
     {
       contact: '',
@@ -1072,8 +1482,15 @@ export default function Index() {
       ext: '',
       startDate: '',
       endDate: '',
+      location: null,
+      locationInput: '',
     },
   ]);
+  const [changeLocationDialog, setChangeLocationDialog] = React.useState({
+    active: false,
+    index: -1,
+    location: null,
+  });
   const [deleteStopModal, setDeleteStopModal] = React.useState({
     active: false,
     index: -1,
@@ -1333,6 +1750,61 @@ export default function Index() {
           });
         }}
       />
+
+      <AddLocationDialog
+        open={showAddLocationDialog}
+        handleClose={() => {
+          setAddLocationDialog(false);
+        }}
+        submitHandler={(data, callback) => {
+          setLocations((loc) => [...loc, data]);
+          setAddLocationDialog(false);
+        }}
+      />
+
+      <SearchLocationDialog
+        open={changeLocationDialog.active}
+        handleClose={() => {
+          setChangeLocationDialog({
+            active: false,
+            index: -1,
+            location: null,
+          });
+        }}
+        value={changeLocationDialog.location?.id}
+        onChange={(val) => {
+          setStops((c) =>
+            c.map((x, ind) => {
+              if (changeLocationDialog.index === ind) {
+                let newLoc = locations.find((lo) => lo.id === val);
+                x.location = newLoc ? newLoc : null;
+                setChangeLocationDialog({
+                  ...changeLocationDialog,
+                  location: newLoc ? newLoc : null,
+                });
+              }
+              return x;
+            })
+          );
+        }}
+        locations={locations}
+        onClear={() => {
+          setStops((c) =>
+            c.map((x, ind) => {
+              if (changeLocationDialog.index === ind) {
+                x.location = null;
+                x.locationInput = '';
+              }
+              return x;
+            })
+          );
+          setChangeLocationDialog({
+            ...changeLocationDialog,
+            location: null,
+          });
+        }}
+      />
+
       {/* header */}
       <Grid item style={{ width: '100%' }}>
         <Header />
@@ -2279,7 +2751,221 @@ export default function Index() {
           <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
             <Grid container>
               {/* left drag inputs */}
-              <Grid item xs={12} lg={8}></Grid>
+              <Grid item xs={12} lg={8}>
+                <Grid container direction="column">
+                  <DragDropContext onDragEnd={commoditiesDragEnd}>
+                    <Droppable droppableId="characters">
+                      {(provided, snapshot) => (
+                        <div
+                          className="characters"
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {stops.map((item, i) => (
+                            <Grid item key={i} style={{ marginTop: '15px' }}>
+                              <Draggable key={`${i}`} draggableId={`${i}`} index={i}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    style={getItemStyle(
+                                      snapshot.isDragging,
+                                      provided.draggableProps.style
+                                    )}
+                                  >
+                                    <div
+                                      style={{
+                                        // padding: '30px 30px',
+                                        border: '1px solid #E0E1E3',
+                                        borderRadius: '15px',
+                                        boxSizing: 'border-box',
+                                      }}
+                                    >
+                                      {/* locationName inputs buttons*/}
+                                      <Grid
+                                        container
+                                        spacing={3}
+                                        style={{ margin: '20px 10px' }}
+                                        justifyContent="space-between"
+                                      >
+                                        {/* locationName */}
+                                        <Grid
+                                          item
+                                          md={3}
+                                          xs={12}
+                                          style={{ paddingTop: matchesSM ? undefined : 0 }}
+                                        >
+                                          <Grid
+                                            container
+                                            spacing={1}
+                                            justifyContent="space-between"
+                                          >
+                                            {/* locationName */}
+                                            {item.location !== null ? (
+                                              <Grid item style={{ flex: 1 }}>
+                                                <Typography
+                                                  variant="body2"
+                                                  style={{
+                                                    fontSize: '13px',
+                                                    fontWeight: 500,
+                                                    color:
+                                                      theme.palette.mode === 'dark'
+                                                        ? theme.palette.light.main
+                                                        : theme.palette.primary.main,
+                                                  }}
+                                                >
+                                                  {item?.location?.name}
+                                                </Typography>
+                                                <Typography
+                                                  variant="body2"
+                                                  style={{
+                                                    fontSize: '13px',
+                                                    marginTop: '4px',
+                                                  }}
+                                                >
+                                                  {item.location.streetOne} <br />
+                                                  {item.location.streetTwo}
+                                                  <br />
+                                                  {item.location?.state}, {item.location?.city}
+                                                  <br />
+                                                  {item.location?.postalCode},{' '}
+                                                  {item.location?.country}
+                                                </Typography>
+                                              </Grid>
+                                            ) : (
+                                              <Grid item style={{ flex: 1 }}>
+                                                <Autocomplete
+                                                  value={item.location?.id}
+                                                  onChange={(event, newValue) => {
+                                                    setStops((c) =>
+                                                      c.map((x, ind) => {
+                                                        if (i === ind) {
+                                                          let newLoc = locations.find(
+                                                            (lo) => lo.id === newValue.id
+                                                          );
+                                                          x.location = newLoc ? newLoc : null;
+                                                        }
+                                                        return x;
+                                                      })
+                                                    );
+                                                  }}
+                                                  inputValue={item.locationInput}
+                                                  onInputChange={(event, newInputValue) => {
+                                                    setStops((c) =>
+                                                      c.map((x, ind) => {
+                                                        if (i === ind) {
+                                                          x.locationInput = newInputValue;
+                                                        }
+                                                        return x;
+                                                      })
+                                                    );
+                                                  }}
+                                                  id="locationInput"
+                                                  disableClearable
+                                                  options={locations.map((c) => {
+                                                    return {
+                                                      label: `${c.streetOne ? c.streetOne : ''} ${
+                                                        c.streetTwo ? c.streetTwo : ''
+                                                      } ${c.state} ${c.city} ${c.postalCode} ${
+                                                        c.country
+                                                      }`,
+                                                      id: c.id,
+                                                    };
+                                                  })}
+                                                  freeSolo
+                                                  renderInput={(params) => (
+                                                    <TextField
+                                                      {...params}
+                                                      variant="standard"
+                                                      InputProps={{
+                                                        ...params.InputProps,
+
+                                                        endAdornment: (
+                                                          <InputAdornment position="end">
+                                                            <IconButton
+                                                              style={{ padding: 0 }}
+                                                              onClick={() =>
+                                                                setAddLocationDialog(true)
+                                                              }
+                                                            >
+                                                              <AddCircleIcon />
+                                                            </IconButton>
+                                                          </InputAdornment>
+                                                        ),
+                                                      }}
+                                                      fullWidth
+                                                      placeholder="Stop Search"
+                                                      sx={textfieldSx}
+                                                    />
+                                                  )}
+                                                />
+                                              </Grid>
+                                            )}
+                                            {/* search */}
+                                            {item.location !== null && (
+                                              <Grid item>
+                                                <IconButton
+                                                  style={{ padding: 0 }}
+                                                  onClick={() => {
+                                                    setChangeLocationDialog({
+                                                      active: true,
+                                                      index: i,
+                                                      location: item.location,
+                                                    });
+                                                  }}
+                                                >
+                                                  <SearchIcon />
+                                                </IconButton>
+                                              </Grid>
+                                            )}
+                                          </Grid>
+                                        </Grid>
+                                        {/* inputs button */}
+                                        <Grid
+                                          item
+                                          md={9}
+                                          xs={12}
+                                          style={{ paddingTop: matchesSM ? undefined : 0 }}
+                                        >
+                                          <Grid container spacing={3}>
+                                            {/* inputs */}
+                                            <Grid item style={{ flex: 1 }}>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                direction={!matchesSM ? 'row' : 'column'}
+                                              >
+                                                {/* contact */}
+                                                <Grid item md={4} xs={12}></Grid>
+                                              </Grid>
+                                            </Grid>
+                                            {/* button */}
+                                            <Grid item>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                direction={matchesSM ? 'row' : 'column'}
+                                              >
+                                                {/* button1 */}
+                                                <Grid item></Grid>
+                                              </Grid>
+                                            </Grid>
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
+                                    </div>
+                                  </div>
+                                )}
+                              </Draggable>
+                            </Grid>
+                          ))}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                </Grid>
+              </Grid>
               {/* right map carrier */}
               <Grid item xs={12} lg={4}></Grid>
             </Grid>
