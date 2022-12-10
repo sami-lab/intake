@@ -4,6 +4,9 @@ import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import lightTheme from '../src/theme';
 import darkTheme from '../src/darkTheme';
 
@@ -28,7 +31,9 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <ThemeContext.Provider value={() => setDarkMode((d) => !d)}>
-          <Component {...pageProps} />
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <Component {...pageProps} />
+          </LocalizationProvider>
         </ThemeContext.Provider>
       </ThemeProvider>
     </CacheProvider>

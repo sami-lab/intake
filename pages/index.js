@@ -33,6 +33,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import uuid from 'react-uuid';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import Header from '../src/reusable/header';
 import countriesData from '../src/data/countries.json';
@@ -1418,6 +1419,286 @@ const SearchLocationDialog = (props) => {
     </Dialog>
   );
 };
+
+const EditStopDialog = (props) => {
+  const theme = useTheme();
+  const [data, setData] = useState({
+    contact: '',
+    contactInput: '',
+    pickup: '',
+    startZone: '',
+    phone: '',
+    ext: '',
+    startDate: '',
+    endDate: '',
+  });
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data);
+    }
+  }, []);
+
+  const submitHandler = () => {
+    setError('');
+    if (
+      data.contact.trim() === '' ||
+      data.phone.trim() === '' ||
+      data.ext.trim() === '' ||
+      data.pickup.trim() === '' ||
+      data.startZone.trim() === '' ||
+      data.startDate.trim() === '' ||
+      data.endDate.trim() === ''
+    ) {
+      setError('Fill all field to Continue');
+      return;
+    }
+    props.submitHandler(data, (err) => {
+      setError(err);
+    });
+  };
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={props.open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={props.handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogContent>
+        <Grid container direction={'column'}>
+          {/* title close*/}
+          <Grid item style={{ width: '100%' }}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: 600,
+                    color:
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.light.main
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  Edit Stop
+                </Typography>
+              </Grid>
+              <Grid item style={{ marginTop: '-10px' }}>
+                <IconButton style={{ padding: 0 }} onClick={props.handleClose}>
+                  <CancelIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* contact phone  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* contact */}
+              <Grid item xs={6}>
+                <Autocomplete
+                  value={data.contact}
+                  onChange={(event, newValue) => {
+                    let newCus = props.customers.find((cs) => cs.id === newValue.id);
+                    setData({
+                      ...data,
+                      contact: newCus ? newCus : null,
+                    });
+                  }}
+                  inputValue={data.contactInput}
+                  onInputChange={(event, newInputValue) => {
+                    setData({
+                      ...data,
+                      contactInput: newInputValue,
+                    });
+                  }}
+                  id="contactInput2"
+                  disableClearable
+                  options={props.customers.map((c) => {
+                    return {
+                      label: c.firstName + ' ' + c.lastName,
+                      id: c.id,
+                    };
+                  })}
+                  freeSolo
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      fullWidth
+                      // sx={textfieldSx}
+                      label="Contact"
+                    />
+                  )}
+                />
+              </Grid>
+              {/* phone */}
+              <Grid item xs={6}>
+                <Grid container spacing={2}>
+                  {/* phone */}
+                  <Grid item style={{ flex: 1 }}>
+                    <TextField
+                      variant="standard"
+                      label="Phone"
+                      placeholder="0000-000-0000"
+                      fullWidth
+                      value={data.phone}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          phone: e.target.value,
+                        })
+                      }
+                    />
+                  </Grid>
+                  {/* ext */}
+                  <Grid item style={{ width: '35%' }}>
+                    <TextField
+                      variant="standard"
+                      label="Ext."
+                      fullWidth
+                      // sx={textfieldSx}
+
+                      value={data.ext}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          ext: e.target.value,
+                        })
+                      }
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* pickup  startZone  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* pickup */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Pick Up"
+                  placeholder="Pick Up"
+                  value={data.pickup}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      pickup: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {/* startZone */}
+              <Grid item xs={6}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  label="Start Zone"
+                  placeholder="00000"
+                  value={data.startZone}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      startZone: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* startDate endDate  */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
+              {/* startDate */}
+              <Grid item xs={6}>
+                <DateTimePicker
+                  value={data.startDate}
+                  onChange={(newValue) =>
+                    setData({
+                      ...data,
+                      startDate: newValue,
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="Start Date"
+                      placeholder="Start Date"
+                      fullWidth
+                      //sx={textfieldSx}
+                      error={false}
+                    />
+                  )}
+                />
+              </Grid>
+              {/* endDate */}
+              <Grid item xs={6}>
+                <DateTimePicker
+                  value={data.endDate}
+                  onChange={(newValue) =>
+                    setData({
+                      ...data,
+                      endDate: newValue,
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="End Date"
+                      placeholder="End Date"
+                      fullWidth
+                      //sx={textfieldSx}
+                      error={false}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {error !== '' && (
+            <Grid item style={{ marginTop: '1em', width: '100%' }}>
+              <Alert severity="warning">{error}</Alert>
+            </Grid>
+          )}
+          {/* submit */}
+          <Grid item style={{ width: '100%', marginTop: '40px' }}>
+            <Grid container spacing={2} justifyContent={'flex-end'}>
+              {/* save */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ boxShadow: 'none', minWidth: '60px' }}
+                  primary
+                  onClick={submitHandler}
+                >
+                  Save
+                </Button>
+              </Grid>
+              {/* cancel */}
+              <Grid item>
+                <Button
+                  variant="contained"
+                  style={{ background: '#92949C', boxShadow: 'none', minWidth: '60px' }}
+                  onClick={props.handleClose}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -1804,6 +2085,55 @@ export default function Index() {
         }}
       />
 
+      <DeleteModal
+        open={deleteStopModal.active}
+        handleClose={() => {
+          setDeleteStopModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+        title="Stop"
+        element={deleteStopModal.name}
+        submitHandler={() => {
+          setStops(stops.filter((c, i) => i !== deleteStopModal.index));
+          setDeleteStopModal({
+            active: false,
+            index: -1,
+            name: '',
+          });
+        }}
+      />
+
+      <EditStopDialog
+        customers={customers}
+        open={editStopModal.active}
+        handleClose={() => {
+          setEditStopModal({
+            active: false,
+            index: -1,
+            data: null,
+          });
+        }}
+        data={editStopModal.data}
+        submitHandler={(data, callback) => {
+          setStops(
+            stops.map((c, i) => {
+              if (i === editStopModal.index) {
+                return data;
+              }
+              return c;
+            })
+          );
+
+          setEditStopModal({
+            active: false,
+            index: -1,
+            data: null,
+          });
+        }}
+      />
       {/* header */}
       <Grid item style={{ width: '100%' }}>
         <Header />
@@ -3108,13 +3438,81 @@ export default function Index() {
                                                     </Grid>
                                                   </Grid>
                                                 </Grid>
+
+                                                {/* start date */}
+                                                <Grid item md={4} xs={12}>
+                                                  <DateTimePicker
+                                                    value={item.startDate}
+                                                    onChange={(newValue) =>
+                                                      setStops((c) =>
+                                                        c.map((x, ind) => {
+                                                          if (i === ind) {
+                                                            x.startDate = newValue;
+                                                          }
+                                                          return x;
+                                                        })
+                                                      )
+                                                    }
+                                                    renderInput={(params) => (
+                                                      <TextField
+                                                        {...params}
+                                                        variant="standard"
+                                                        placeholder="Start Date"
+                                                        fullWidth
+                                                        sx={textfieldSx}
+                                                        error={false}
+                                                        InputProps={{
+                                                          ...params.InputProps,
+                                                          startAdornment: (
+                                                            <InputAdornment position="start">
+                                                              Start Date
+                                                            </InputAdornment>
+                                                          ),
+                                                        }}
+                                                      />
+                                                    )}
+                                                  />
+                                                </Grid>
+                                                {/* End date */}
+                                                <Grid item md={4} xs={12}>
+                                                  <DateTimePicker
+                                                    value={item.endDate}
+                                                    onChange={(newValue) =>
+                                                      setStops((c) =>
+                                                        c.map((x, ind) => {
+                                                          if (i === ind) {
+                                                            x.endDate = newValue;
+                                                          }
+                                                          return x;
+                                                        })
+                                                      )
+                                                    }
+                                                    renderInput={(params) => (
+                                                      <TextField
+                                                        {...params}
+                                                        variant="standard"
+                                                        fullWidth
+                                                        sx={textfieldSx}
+                                                        error={false}
+                                                        InputProps={{
+                                                          ...params.InputProps,
+                                                          startAdornment: (
+                                                            <InputAdornment position="start">
+                                                              End Date
+                                                            </InputAdornment>
+                                                          ),
+                                                        }}
+                                                      />
+                                                    )}
+                                                  />
+                                                </Grid>
                                               </Grid>
                                             </Grid>
                                             {/* button */}
                                             <Grid item>
                                               <Grid
                                                 container
-                                                spacing={1}
+                                                spacing={2}
                                                 direction={matchesSM ? 'row' : 'column'}
                                               >
                                                 {/* button1 */}
