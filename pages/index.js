@@ -1745,7 +1745,7 @@ export default function Index() {
     actualMargin: '',
   });
 
-  const [expanded, setExpanded] = React.useState('panel2');
+  const [expanded, setExpanded] = React.useState('panel1');
 
   const [locations, setLocations] = useState(sampleLocations);
   const [showAddLocationDialog, setAddLocationDialog] = useState(false);
