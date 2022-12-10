@@ -3694,7 +3694,7 @@ export default function Index() {
                     <div
                       style={{
                         position: 'relative',
-                        width: '299.981px',
+                        width: '199.981px',
                         height: '164.362px',
                         overflow: 'hidden',
                         borderRadius: '15px',
