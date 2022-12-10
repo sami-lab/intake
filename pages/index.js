@@ -1937,6 +1937,15 @@ export default function Index() {
     const items = reorder(charges, result.source.index, result.destination.index);
     setCharges(items);
   };
+  const stopsDragEnd = async (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(stops, result.source.index, result.destination.index);
+    setStops(items);
+  };
   const cardStyleSx = {
     boxShadow:
       theme.palette.mode === 'dark'
@@ -3185,7 +3194,7 @@ export default function Index() {
               {/* left drag inputs */}
               <Grid item xs={12} lg={8}>
                 <Grid container direction="column">
-                  <DragDropContext onDragEnd={commoditiesDragEnd}>
+                  <DragDropContext onDragEnd={stopsDragEnd}>
                     <Droppable droppableId="characters">
                       {(provided, snapshot) => (
                         <div
