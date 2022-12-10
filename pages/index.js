@@ -211,7 +211,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const AddOrUpdateCustomerModal = (props) => {
   const theme = useTheme();
   const [data, setData] = useState({
-    id: null,
+    id: uuid(),
     firstName: '',
     lastName: '',
     phone: '',
@@ -1709,7 +1709,7 @@ export default function Index() {
   const [customers, setCustomers] = useState([...sampleCustomers]);
   const [customer, setCustomer] = useState({
     refNo: '',
-    contact: '',
+    contact: null,
     phone: '',
     ext: '',
     mileage: '',
@@ -1835,7 +1835,25 @@ export default function Index() {
       customer: null,
     });
   };
-
+  const updateCustomerHandler = (data, callback) => {
+    setCustomers(
+      customers.map((c) => {
+        if (c.id === openAddCustomerModal.customer?.id) {
+          return data;
+        }
+        return c;
+      })
+    );
+    setCustomer({
+      ...customer,
+      contact: data,
+    });
+    setContactInputValue(`${data.firstName} ${data.lastName}`);
+    setOpenAddCustomerModal({
+      active: false,
+      customer: null,
+    });
+  };
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -1914,7 +1932,9 @@ export default function Index() {
         }}
         edit={openAddCustomerModal.customer !== null}
         customer={openAddCustomerModal.customer}
-        submitHandler={addCustomerHandler}
+        submitHandler={
+          openAddCustomerModal.customer !== null ? updateCustomerHandler : addCustomerHandler
+        }
       />
       <SelectEquipmentDialog
         open={selectEquipmentModal.active}
@@ -2226,11 +2246,12 @@ export default function Index() {
                           {/* contact input */}
                           <Grid item style={{ flex: 1 }}>
                             <Autocomplete
-                              value={customer.contact}
+                              value={customer?.contact?.id}
                               onChange={(event, newValue) => {
+                                const newCus = customers.find((c) => c.id === newValue.id);
                                 setCustomer({
                                   ...customer,
-                                  contact: newValue,
+                                  contact: newCus ? newCus : null,
                                 });
                               }}
                               inputValue={contactInputValue}
@@ -3616,7 +3637,7 @@ export default function Index() {
                         borderRadius: '15px',
                       }}
                     >
-                      <Grid container spacing={2}>
+                      <Grid container spacing={3}>
                         {/* carrier */}
                         {carrier !== null && (
                           <Grid item md={6} xs={12}>
@@ -3667,10 +3688,126 @@ export default function Index() {
                               <br />
                               {carrier?.postalCode}, {carrier?.country}
                             </Typography>
+                            {/* DOT MC */}
+                            <Grid container spacing={3} style={{ marginTop: '20px' }}>
+                              {/* DOT */}
+                              <Grid item>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                  }}
+                                >
+                                  DOT
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    marginTop: '4px',
+                                  }}
+                                >
+                                  00000000
+                                </Typography>
+                              </Grid>
+                              {/* MC */}
+                              <Grid item>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                  }}
+                                >
+                                  MC
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    marginTop: '4px',
+                                  }}
+                                >
+                                  00000000
+                                </Typography>
+                              </Grid>
+                            </Grid>
                           </Grid>
                         )}
                         {/* customer */}
-                        <Grid item md={6} xs={12}></Grid>
+                        {customer?.contact !== null && (
+                          <Grid item md={6} xs={12}>
+                            {/* customer name Edit*/}
+                            <Grid container spacing={1} justifyContent="space-between">
+                              {/* customer Name */}
+                              <Grid item>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    fontWeight: 500,
+                                    color:
+                                      theme.palette.mode === 'dark'
+                                        ? theme.palette.light.main
+                                        : theme.palette.primary.main,
+                                  }}
+                                >
+                                  {customer?.contact?.firstName ? customer?.contact?.firstName : ''}
+                                  {customer?.contact?.lastName
+                                    ? ' ' + customer?.contact?.lastName
+                                    : ''}
+                                </Typography>
+                              </Grid>
+                              {/* edit */}
+                              <Grid item>
+                                <IconButton
+                                  style={{ padding: 0 }}
+                                  onClick={() => {
+                                    setOpenAddCustomerModal({
+                                      active: true,
+                                      customer: customer.contact,
+                                    });
+                                  }}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                              </Grid>
+                            </Grid>
+                            {/* phone ext */}
+                            <Grid container style={{ gap: '20px' }}>
+                              {/* phone */}
+                              <Typography
+                                variant="body2"
+                                style={{
+                                  fontSize: '13px',
+                                  marginTop: '4px',
+                                }}
+                              >
+                                {customer?.contact?.phone}
+                              </Typography>
+                              {/* ext */}
+                              <Typography
+                                variant="body2"
+                                style={{
+                                  fontSize: '13px',
+                                  marginTop: '4px',
+                                }}
+                              >
+                                {customer?.contact?.ext}
+                              </Typography>
+                            </Grid>
+
+                            {/* email */}
+                            <Typography
+                              variant="body2"
+                              style={{
+                                fontSize: '13px',
+                                marginTop: '4px',
+                              }}
+                            >
+                              {customer?.contact?.email}
+                            </Typography>
+                          </Grid>
+                        )}
                       </Grid>
                     </div>
                     {/* search carrier */}
