@@ -34,13 +34,15 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
+
 import uuid from 'react-uuid';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import mapboxgl from 'mapbox-gl';
 
 import Header from '../src/reusable/header';
 import countriesData from '../src/data/countries.json';
+resetServerContext();
 
 mapboxgl.accessToken = publicRuntimeConfig.MAPBOX_ACCESS_TOKEN;
 
