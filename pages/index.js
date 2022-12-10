@@ -1703,6 +1703,7 @@ export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesLG = useMediaQuery(theme.breakpoints.down('lg'));
 
   const matches1400 = useMediaQuery(theme.breakpoints.down('1400'));
 
@@ -4081,6 +4082,7 @@ export default function Index() {
                                     borderRadius: '15px',
                                     gap: '40px',
                                   }}
+                                  direction={matchesMD ? 'column' : 'row'}
                                 >
                                   {/* commodityName */}
                                   <Grid item>
@@ -4236,7 +4238,11 @@ export default function Index() {
                                   </Grid>
                                   {/* button */}
                                   <Grid item>
-                                    <Grid container style={{ gap: '20px' }}>
+                                    <Grid
+                                      container
+                                      justifyContent={matchesMD ? 'flex-end' : 'flex-start'}
+                                      style={{ gap: '20px' }}
+                                    >
                                       {/* edit */}
                                       <Grid item>
                                         <IconButton
@@ -4431,6 +4437,7 @@ export default function Index() {
                                     borderRadius: '15px',
                                     gap: '40px',
                                   }}
+                                  direction={matchesMD ? 'column' : 'row'}
                                 >
                                   {/* billTo */}
                                   <Grid item>
@@ -4601,7 +4608,11 @@ export default function Index() {
                                   </Grid>
                                   {/* button */}
                                   <Grid item>
-                                    <Grid container style={{ gap: '20px' }}>
+                                    <Grid
+                                      container
+                                      justifyContent={matchesMD ? 'flex-end' : 'flex-start'}
+                                      style={{ gap: '20px' }}
+                                    >
                                       {/* edit */}
                                       <Grid item>
                                         <IconButton
