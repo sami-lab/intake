@@ -3701,152 +3701,52 @@ export default function Index() {
                   </Grid>
                   {/* carrier customer search Carrier */}
                   <Grid item style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        width: '100%',
-                        padding: '30px 30px',
-                        border: '1px solid #E0E1E3',
-                        borderRadius: '15px',
-                      }}
-                    >
-                      <Grid container spacing={3}>
-                        {/* carrier */}
-                        {carrier !== null && (
-                          <Grid item md={6} xs={12}>
-                            <Grid container spacing={1} justifyContent="space-between">
-                              {/* carrier Name */}
-                              <Grid item>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                    fontWeight: 500,
-                                    color:
-                                      theme.palette.mode === 'dark'
-                                        ? theme.palette.light.main
-                                        : theme.palette.primary.main,
-                                  }}
-                                >
-                                  {carrier?.name}
-                                </Typography>
+                    {(carrier !== null || customer?.contact !== null) && (
+                      <div
+                        style={{
+                          width: '100%',
+                          padding: '30px 30px',
+                          border: '1px solid #E0E1E3',
+                          borderRadius: '15px',
+                        }}
+                      >
+                        <Grid container spacing={3}>
+                          {/* carrier */}
+                          {carrier !== null && (
+                            <Grid item md={6} xs={12}>
+                              <Grid container spacing={1} justifyContent="space-between">
+                                {/* carrier Name */}
+                                <Grid item>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                      fontWeight: 500,
+                                      color:
+                                        theme.palette.mode === 'dark'
+                                          ? theme.palette.light.main
+                                          : theme.palette.primary.main,
+                                    }}
+                                  >
+                                    {carrier?.name}
+                                  </Typography>
+                                </Grid>
+                                {/* search */}
+                                <Grid item>
+                                  <IconButton
+                                    style={{ padding: 0 }}
+                                    onClick={() => {
+                                      setChangeCarrierDialog({
+                                        active: true,
+                                        carrier: carrier,
+                                      });
+                                    }}
+                                  >
+                                    <SearchIcon />
+                                  </IconButton>
+                                </Grid>
                               </Grid>
-                              {/* search */}
-                              <Grid item>
-                                <IconButton
-                                  style={{ padding: 0 }}
-                                  onClick={() => {
-                                    setChangeCarrierDialog({
-                                      active: true,
-                                      carrier: carrier,
-                                    });
-                                  }}
-                                >
-                                  <SearchIcon />
-                                </IconButton>
-                              </Grid>
-                            </Grid>
-                            {/* location */}
-                            <Typography
-                              variant="body2"
-                              style={{
-                                fontSize: '13px',
-                                marginTop: '4px',
-                              }}
-                            >
-                              {carrier?.streetOne} <br />
-                              {carrier?.streetTwo}
-                              <br />
-                              {carrier?.state}, {carrier?.city}
-                              <br />
-                              {carrier?.postalCode}, {carrier?.country}
-                            </Typography>
-                            {/* DOT MC */}
-                            <Grid container spacing={3} style={{ marginTop: '20px' }}>
-                              {/* DOT */}
-                              <Grid item>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                  }}
-                                >
-                                  DOT
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                    marginTop: '4px',
-                                  }}
-                                >
-                                  00000000
-                                </Typography>
-                              </Grid>
-                              {/* MC */}
-                              <Grid item>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                  }}
-                                >
-                                  MC
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                    marginTop: '4px',
-                                  }}
-                                >
-                                  00000000
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        )}
-                        {/* customer */}
-                        {customer?.contact !== null && (
-                          <Grid item md={6} xs={12}>
-                            {/* customer name Edit*/}
-                            <Grid container spacing={1} justifyContent="space-between">
-                              {/* customer Name */}
-                              <Grid item>
-                                <Typography
-                                  variant="body2"
-                                  style={{
-                                    fontSize: '13px',
-                                    fontWeight: 500,
-                                    color:
-                                      theme.palette.mode === 'dark'
-                                        ? theme.palette.light.main
-                                        : theme.palette.primary.main,
-                                  }}
-                                >
-                                  {customer?.contact?.firstName ? customer?.contact?.firstName : ''}
-                                  {customer?.contact?.lastName
-                                    ? ' ' + customer?.contact?.lastName
-                                    : ''}
-                                </Typography>
-                              </Grid>
-                              {/* edit */}
-                              <Grid item>
-                                <IconButton
-                                  style={{ padding: 0 }}
-                                  onClick={() => {
-                                    setOpenAddCustomerModal({
-                                      active: true,
-                                      customer: customer.contact,
-                                    });
-                                  }}
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                              </Grid>
-                            </Grid>
-                            {/* phone ext */}
-                            <Grid container style={{ gap: '20px' }}>
-                              {/* phone */}
+                              {/* location */}
                               <Typography
                                 variant="body2"
                                 style={{
@@ -3854,34 +3754,138 @@ export default function Index() {
                                   marginTop: '4px',
                                 }}
                               >
-                                {customer?.contact?.phone}
+                                {carrier?.streetOne} <br />
+                                {carrier?.streetTwo}
+                                <br />
+                                {carrier?.state}, {carrier?.city}
+                                <br />
+                                {carrier?.postalCode}, {carrier?.country}
                               </Typography>
-                              {/* ext */}
-                              <Typography
-                                variant="body2"
-                                style={{
-                                  fontSize: '13px',
-                                  marginTop: '4px',
-                                }}
-                              >
-                                {customer?.contact?.ext}
-                              </Typography>
+                              {/* DOT MC */}
+                              <Grid container spacing={3} style={{ marginTop: '20px' }}>
+                                {/* DOT */}
+                                <Grid item>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                    }}
+                                  >
+                                    DOT
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                      marginTop: '4px',
+                                    }}
+                                  >
+                                    00000000
+                                  </Typography>
+                                </Grid>
+                                {/* MC */}
+                                <Grid item>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                    }}
+                                  >
+                                    MC
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                      marginTop: '4px',
+                                    }}
+                                  >
+                                    00000000
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                             </Grid>
+                          )}
+                          {/* customer */}
+                          {customer?.contact !== null && (
+                            <Grid item md={6} xs={12}>
+                              {/* customer name Edit*/}
+                              <Grid container spacing={1} justifyContent="space-between">
+                                {/* customer Name */}
+                                <Grid item>
+                                  <Typography
+                                    variant="body2"
+                                    style={{
+                                      fontSize: '13px',
+                                      fontWeight: 500,
+                                      color:
+                                        theme.palette.mode === 'dark'
+                                          ? theme.palette.light.main
+                                          : theme.palette.primary.main,
+                                    }}
+                                  >
+                                    {customer?.contact?.firstName
+                                      ? customer?.contact?.firstName
+                                      : ''}
+                                    {customer?.contact?.lastName
+                                      ? ' ' + customer?.contact?.lastName
+                                      : ''}
+                                  </Typography>
+                                </Grid>
+                                {/* edit */}
+                                <Grid item>
+                                  <IconButton
+                                    style={{ padding: 0 }}
+                                    onClick={() => {
+                                      setOpenAddCustomerModal({
+                                        active: true,
+                                        customer: customer.contact,
+                                      });
+                                    }}
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                </Grid>
+                              </Grid>
+                              {/* phone ext */}
+                              <Grid container style={{ gap: '20px' }}>
+                                {/* phone */}
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    marginTop: '4px',
+                                  }}
+                                >
+                                  {customer?.contact?.phone}
+                                </Typography>
+                                {/* ext */}
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    fontSize: '13px',
+                                    marginTop: '4px',
+                                  }}
+                                >
+                                  {customer?.contact?.ext}
+                                </Typography>
+                              </Grid>
 
-                            {/* email */}
-                            <Typography
-                              variant="body2"
-                              style={{
-                                fontSize: '13px',
-                                marginTop: '4px',
-                              }}
-                            >
-                              {customer?.contact?.email}
-                            </Typography>
-                          </Grid>
-                        )}
-                      </Grid>
-                    </div>
+                              {/* email */}
+                              <Typography
+                                variant="body2"
+                                style={{
+                                  fontSize: '13px',
+                                  marginTop: '4px',
+                                }}
+                              >
+                                {customer?.contact?.email}
+                              </Typography>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </div>
+                    )}
                     {/* search carrier */}
                     <div
                       style={{
@@ -3890,6 +3894,7 @@ export default function Index() {
                         border: '1px dotted #E0E1E3',
                         borderRadius: '15px',
                         marginTop: '10px',
+                        minWidth: '300px',
                       }}
                     >
                       <Autocomplete
