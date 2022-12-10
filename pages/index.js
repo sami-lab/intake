@@ -3198,7 +3198,6 @@ export default function Index() {
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
                                     style={getItemStyle(
                                       snapshot.isDragging,
                                       provided.draggableProps.style
@@ -3618,7 +3617,10 @@ export default function Index() {
                                               >
                                                 {/* button1 */}
                                                 <Grid item>
-                                                  <IconButton style={{ padding: 0 }}>
+                                                  <IconButton
+                                                    style={{ padding: 0 }}
+                                                    {...provided.dragHandleProps}
+                                                  >
                                                     <MenuIcon fontSize="small" />
                                                   </IconButton>
                                                 </Grid>
@@ -4125,7 +4127,6 @@ export default function Index() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                {...provided.dragHandleProps}
                                 style={getItemStyle(
                                   snapshot.isDragging,
                                   provided.draggableProps.style
@@ -4333,7 +4334,10 @@ export default function Index() {
                                       </Grid>
                                       {/* Menu */}
                                       <Grid item>
-                                        <IconButton style={{ padding: 0 }}>
+                                        <IconButton
+                                          style={{ padding: 0 }}
+                                          {...provided.dragHandleProps}
+                                        >
                                           <MenuIcon fontSize="small" />
                                         </IconButton>
                                       </Grid>
@@ -4480,7 +4484,6 @@ export default function Index() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                {...provided.dragHandleProps}
                                 style={getItemStyle(
                                   snapshot.isDragging,
                                   provided.draggableProps.style
@@ -4703,7 +4706,10 @@ export default function Index() {
                                       </Grid>
                                       {/* Menu */}
                                       <Grid item>
-                                        <IconButton style={{ padding: 0 }}>
+                                        <IconButton
+                                          {...provided.dragHandleProps}
+                                          style={{ padding: 0 }}
+                                        >
                                           <MenuIcon fontSize="small" />
                                         </IconButton>
                                       </Grid>
