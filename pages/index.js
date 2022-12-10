@@ -2476,10 +2476,14 @@ export default function Index() {
                           variant="body2"
                           style={{
                             fontSize: '13px',
-                            width: '45%',
+                            //width: matches1400 ? '90%' : '45%',
                             lineHeight: '20px',
                             color:
                               theme.palette.mode === 'dark' ? theme.palette.light.main : '#777777',
+                          }}
+                          sx={{
+                            width: (theme) =>
+                              useMediaQuery(theme.breakpoints.down(1450)) ? '80%' : '45%',
                           }}
                         >
                           {customer.address}
@@ -4160,7 +4164,7 @@ export default function Index() {
                                   direction={matchesMD ? 'column' : 'row'}
                                 >
                                   {/* commodityName */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="Commodity Name"
@@ -4187,7 +4191,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* Pieces */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="Code"
@@ -4212,7 +4216,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* weight */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000"
@@ -4237,7 +4241,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* pallets */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000"
@@ -4262,7 +4266,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* cube */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000"
@@ -4287,7 +4291,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* volume */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000"
@@ -4517,7 +4521,7 @@ export default function Index() {
                                   direction={matchesMD ? 'column' : 'row'}
                                 >
                                   {/* billTo */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       select
                                       variant="standard"
@@ -4550,7 +4554,7 @@ export default function Index() {
                                     </TextField>
                                   </Grid>
                                   {/* chargeCode */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="Code"
@@ -4577,7 +4581,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* description */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="Charge Description"
@@ -4604,7 +4608,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* quantity */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000"
@@ -4629,7 +4633,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* rate */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000.00"
@@ -4656,7 +4660,7 @@ export default function Index() {
                                     />
                                   </Grid>
                                   {/* amount */}
-                                  <Grid item>
+                                  <Grid item xs>
                                     <TextField
                                       variant="standard"
                                       placeholder="000.00"
