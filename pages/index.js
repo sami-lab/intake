@@ -1308,11 +1308,9 @@ const SearchLocationDialog = (props) => {
   const [changeLocationInput, setChangeLocationInput] = React.useState('');
 
   useEffect(() => {
-    console.log(props.value, '--====================-');
     if (props.value) {
       //setValue(`${props.value}`);
       let c = props.locations.find((loc) => loc.id == props.value);
-      console.log(c);
       setChangeLocationInput(
         `${c.streetOne ? c.streetOne : ''} ${c.streetTwo ? c.streetTwo : ''} ${c.state} ${c.city} ${
           c.postalCode
@@ -1476,6 +1474,7 @@ export default function Index() {
   const [stops, setStops] = React.useState([
     {
       contact: '',
+      contactInput: '',
       pickup: '',
       startZone: '',
       phone: '',
@@ -2776,26 +2775,16 @@ export default function Index() {
                                   >
                                     <div
                                       style={{
-                                        // padding: '30px 30px',
+                                        width: '100%',
+                                        padding: '30px 30px',
                                         border: '1px solid #E0E1E3',
                                         borderRadius: '15px',
-                                        boxSizing: 'border-box',
                                       }}
                                     >
                                       {/* locationName inputs buttons*/}
-                                      <Grid
-                                        container
-                                        spacing={3}
-                                        style={{ margin: '20px 10px' }}
-                                        justifyContent="space-between"
-                                      >
+                                      <Grid container spacing={5} justifyContent="space-between">
                                         {/* locationName */}
-                                        <Grid
-                                          item
-                                          md={3}
-                                          xs={12}
-                                          style={{ paddingTop: matchesSM ? undefined : 0 }}
-                                        >
+                                        <Grid item md={3} xs={12}>
                                           <Grid
                                             container
                                             spacing={1}
@@ -2922,33 +2911,248 @@ export default function Index() {
                                           </Grid>
                                         </Grid>
                                         {/* inputs button */}
-                                        <Grid
-                                          item
-                                          md={9}
-                                          xs={12}
-                                          style={{ paddingTop: matchesSM ? undefined : 0 }}
-                                        >
-                                          <Grid container spacing={3}>
+                                        <Grid item md={9} xs={12}>
+                                          <Grid container spacing={5}>
                                             {/* inputs */}
                                             <Grid item style={{ flex: 1 }}>
                                               <Grid
                                                 container
-                                                spacing={2}
+                                                spacing={5}
                                                 direction={!matchesSM ? 'row' : 'column'}
                                               >
                                                 {/* contact */}
-                                                <Grid item md={4} xs={12}></Grid>
+                                                <Grid item md={4} xs={12}>
+                                                  <Grid container spacing={1} alignItems="center">
+                                                    {/* contact input */}
+                                                    <Grid item style={{ flex: 1 }}>
+                                                      <Autocomplete
+                                                        value={item.contact}
+                                                        onChange={(event, newValue) => {
+                                                          setStops((c) =>
+                                                            c.map((x, ind) => {
+                                                              if (i === ind) {
+                                                                let newCus = customers.find(
+                                                                  (cs) => cs.id === newValue.id
+                                                                );
+                                                                x.contact = newCus ? newCus : null;
+                                                              }
+                                                              return x;
+                                                            })
+                                                          );
+                                                        }}
+                                                        inputValue={item.contactInput}
+                                                        onInputChange={(event, newInputValue) => {
+                                                          setStops((c) =>
+                                                            c.map((x, ind) => {
+                                                              if (i === ind) {
+                                                                x.contactInput = newInputValue;
+                                                              }
+                                                              return x;
+                                                            })
+                                                          );
+                                                        }}
+                                                        id="contactInput1"
+                                                        disableClearable
+                                                        options={customers.map((c) => {
+                                                          return {
+                                                            label: c.firstName + ' ' + c.lastName,
+                                                            id: c.id,
+                                                          };
+                                                        })}
+                                                        freeSolo
+                                                        renderInput={(params) => (
+                                                          <TextField
+                                                            {...params}
+                                                            variant="standard"
+                                                            fullWidth
+                                                            sx={textfieldSx}
+                                                            InputProps={{
+                                                              ...params.InputProps,
+
+                                                              startAdornment: (
+                                                                <InputAdornment position="start">
+                                                                  Contact
+                                                                </InputAdornment>
+                                                              ),
+                                                            }}
+                                                          />
+                                                        )}
+                                                      />
+                                                    </Grid>
+                                                    {/* add Icon */}
+                                                    <Grid item>
+                                                      <IconButton
+                                                        style={{ padding: 0 }}
+                                                        onClick={() => {
+                                                          setOpenAddCustomerModal({
+                                                            active: true,
+                                                            customer: null,
+                                                          });
+                                                        }}
+                                                        disableRipple
+                                                      >
+                                                        <PersonAddAlt1Icon fontSize="small" />
+                                                      </IconButton>
+                                                    </Grid>
+                                                  </Grid>
+                                                </Grid>
+                                                {/* pickup */}
+                                                <Grid item md={4} xs={12}>
+                                                  <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    sx={textfieldSx}
+                                                    InputProps={{
+                                                      startAdornment: (
+                                                        <InputAdornment position="start">
+                                                          Pick Up
+                                                        </InputAdornment>
+                                                      ),
+                                                    }}
+                                                    value={item.pickup}
+                                                    onChange={(e) =>
+                                                      setStops((c) =>
+                                                        c.map((x, ind) => {
+                                                          if (i === ind) {
+                                                            x.pickup = e.target.value;
+                                                          }
+                                                          return x;
+                                                        })
+                                                      )
+                                                    }
+                                                  />
+                                                </Grid>
+                                                {/* startZone */}
+                                                <Grid item md={4} xs={12}>
+                                                  <TextField
+                                                    variant="standard"
+                                                    placeholder="00000"
+                                                    fullWidth
+                                                    sx={textfieldSx}
+                                                    InputProps={{
+                                                      startAdornment: (
+                                                        <InputAdornment position="start">
+                                                          Start Zone
+                                                        </InputAdornment>
+                                                      ),
+                                                    }}
+                                                    value={item.startZone}
+                                                    onChange={(e) =>
+                                                      setStops((c) =>
+                                                        c.map((x, ind) => {
+                                                          if (i === ind) {
+                                                            x.startZone = e.target.value;
+                                                          }
+                                                          return x;
+                                                        })
+                                                      )
+                                                    }
+                                                  />
+                                                </Grid>
+                                                {/* phone ext */}
+                                                <Grid item md={4} xs={12}>
+                                                  <Grid container spacing={2}>
+                                                    {/* phone */}
+                                                    <Grid item style={{ flex: 1 }}>
+                                                      <TextField
+                                                        variant="standard"
+                                                        placeholder="0000-000-0000"
+                                                        fullWidth
+                                                        sx={textfieldSx}
+                                                        InputProps={{
+                                                          startAdornment: (
+                                                            <InputAdornment position="start">
+                                                              Phone
+                                                            </InputAdornment>
+                                                          ),
+                                                        }}
+                                                        value={item.phone}
+                                                        onChange={(e) =>
+                                                          setStops((c) =>
+                                                            c.map((x, ind) => {
+                                                              if (i === ind) {
+                                                                x.phone = e.target.value;
+                                                              }
+                                                              return x;
+                                                            })
+                                                          )
+                                                        }
+                                                      />
+                                                    </Grid>
+                                                    {/* ext */}
+                                                    <Grid item style={{ width: '35%' }}>
+                                                      <TextField
+                                                        variant="standard"
+                                                        placeholder="0000"
+                                                        fullWidth
+                                                        sx={textfieldSx}
+                                                        InputProps={{
+                                                          startAdornment: (
+                                                            <InputAdornment position="start">
+                                                              Ext.{' '}
+                                                            </InputAdornment>
+                                                          ),
+                                                        }}
+                                                        value={item.ext}
+                                                        onChange={(e) =>
+                                                          setStops((c) =>
+                                                            c.map((x, ind) => {
+                                                              if (i === ind) {
+                                                                x.ext = e.target.value;
+                                                              }
+                                                              return x;
+                                                            })
+                                                          )
+                                                        }
+                                                      />
+                                                    </Grid>
+                                                  </Grid>
+                                                </Grid>
                                               </Grid>
                                             </Grid>
                                             {/* button */}
                                             <Grid item>
                                               <Grid
                                                 container
-                                                spacing={2}
+                                                spacing={1}
                                                 direction={matchesSM ? 'row' : 'column'}
                                               >
                                                 {/* button1 */}
-                                                <Grid item></Grid>
+                                                <Grid item>
+                                                  <IconButton style={{ padding: 0 }}>
+                                                    <MenuIcon fontSize="small" />
+                                                  </IconButton>
+                                                </Grid>
+                                                {/* button2 */}
+                                                <Grid item>
+                                                  <IconButton
+                                                    style={{ padding: 0 }}
+                                                    onClick={() => {
+                                                      setEditStopModal({
+                                                        active: true,
+                                                        index: i,
+                                                        data: item,
+                                                      });
+                                                    }}
+                                                  >
+                                                    <EditIcon fontSize="small" />
+                                                  </IconButton>
+                                                </Grid>
+                                                {/* delete */}
+                                                <Grid item>
+                                                  <IconButton
+                                                    style={{ padding: 0 }}
+                                                    onClick={() => {
+                                                      setDeleteStopModal({
+                                                        active: true,
+                                                        index: i,
+                                                        name: item.location?.name,
+                                                      });
+                                                    }}
+                                                  >
+                                                    <DeleteIcon fontSize="small" />
+                                                  </IconButton>
+                                                </Grid>
                                               </Grid>
                                             </Grid>
                                           </Grid>
