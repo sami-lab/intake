@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 import {
   Grid,
   useTheme,
@@ -34,9 +37,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import uuid from 'react-uuid';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import mapboxgl from 'mapbox-gl';
 
 import Header from '../src/reusable/header';
 import countriesData from '../src/data/countries.json';
+
+mapboxgl.accessToken = publicRuntimeConfig.MAPBOX_ACCESS_TOKEN;
 
 const sampleCustomers = [
   {
@@ -1699,6 +1705,46 @@ const EditStopDialog = (props) => {
     </Dialog>
   );
 };
+
+const Map = (props) => {
+  const lng = props.lon || -84.294389;
+  const lat = props.lat || 37.748815;
+
+  const mapContainerRef = useRef(null);
+
+  useEffect(() => {
+    //map initialize
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lng, lat],
+      zoom: 9,
+    });
+
+    //marker initialize
+    var marker = new mapboxgl.Marker({
+      color: '#EA4335',
+    })
+      .setLngLat([lng, lat])
+      .addTo(map);
+
+    // clean up on unmount
+    return () => map.remove();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const con = document.querySelector('.mapboxgl-control-container');
+    if (con) {
+      con.remove();
+    }
+  }, []);
+  return (
+    <>
+      <div style={{ top: 0, left: 0, width: '100%', height: '100%' }} ref={mapContainerRef} />
+    </>
+  );
+};
+
 export default function Index() {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -3133,7 +3179,7 @@ export default function Index() {
             </Grid>
           </Grid>
           <AccordionDetails style={{ padding: 0, paddingBottom: '40px' }}>
-            <Grid container>
+            <Grid container spacing={4}>
               {/* left drag inputs */}
               <Grid item xs={12} lg={8}>
                 <Grid container direction="column">
@@ -3146,7 +3192,7 @@ export default function Index() {
                           ref={provided.innerRef}
                         >
                           {stops.map((item, i) => (
-                            <Grid item key={i} style={{ marginTop: '15px' }}>
+                            <Grid item key={i} style={{ marginTop: i === 0 ? 0 : '15px' }}>
                               <Draggable key={`${i}`} draggableId={`${i}`} index={i}>
                                 {(provided, snapshot) => (
                                   <div
@@ -3627,7 +3673,19 @@ export default function Index() {
               <Grid item xs={12} lg={4}>
                 <Grid container spacing={4}>
                   {/* map */}
-                  <Grid item style={{ marginTop: '2em' }}></Grid>
+                  <Grid item style={{ marginTop: '2em' }}>
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '299.981px',
+                        height: '164.362px',
+                        overflow: 'hidden',
+                        borderRadius: '15px',
+                      }}
+                    >
+                      <Map />
+                    </div>
+                  </Grid>
                   {/* carrier customer search Carrier */}
                   <Grid item style={{ flex: 1 }}>
                     <div
